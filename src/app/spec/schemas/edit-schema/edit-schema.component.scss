@@ -1,0 +1,11 @@
+@import "src/variables";
+
+:host {
+  display: block;
+}
+
+[data-model] {
+  background-color: $sn-secondary-100-color;
+  padding: $sn-gutter-normal;
+  border-radius: $sn-corner-small;
+}

@@ -1,0 +1,75 @@
+<sn-popover></sn-popover>
+<sn-modal [backdrop]="backdrop"></sn-modal>
+
+<sn-app-busyness></sn-app-busyness>
+
+<sn-app-layout #layout [position]="ui.placement.fixed">
+  <sn-app-header>
+    <ng-template #headerLogoTemplate>
+      <a href="//www.apiprojector.com">
+        <img src="assets/images/logo_white.svg?v2" width="211" height="38">
+      </a>
+    </ng-template>
+
+    <sn-menu #headerTopMenu>
+      <sn-menu-item title="Projects"
+                    i18n-title="@@label.projects"
+                    [link]="['/projects']"
+                    [icon]="localUi.icons.projects"
+                    [matching]="ui.matching.wildcard"></sn-menu-item>
+    </sn-menu>
+
+    <ng-template #notLoggedTemplate>
+      <sn-link title="Login"
+               i18n-title="@@label.login"
+               [icon]="ui.icons.login"
+               [outline]="ui.outline.ghost"
+               [source]="['/login']"></sn-link>
+    </ng-template>
+
+    <ng-template #headerContentTemplate let-hide="hide">
+      <sn-stack [orientation]="ui.orientation.horizontal"
+                [align]="ui.align.center">
+        <sn-link title="Slack community"
+                 [outline]="ui.outline.ghost"
+                 [icon]="localUi.icons.slack"
+                 [target]="ui.target.blank"
+                 source="https://join.slack.com/t/apiprojector/shared_invite/zt-11g2jfm78-LxCUZy_TjT1YfP68DgQPcg"></sn-link>
+        <ng-container *ngIf="!!config.token && !!me;else notLoggedTemplate">
+          <sn-button data-support
+                     text="Bug or feature?"
+                     [icon]="ui.icons.bug"
+                     (click)="hide?.call();createIssue()"></sn-button>
+
+        </ng-container>
+      </sn-stack>
+    </ng-template>
+
+    <ng-template #headerUserbarTemplate *ngIf="!!config.token" let-hide1="hide">
+      <sn-app-header-userbar>
+        <ng-template #userbarAvatarTemplate>
+          <sn-stack [orientation]="ui.orientation.horizontal"
+                    [align]="ui.align.center">
+            <div data-me>{{me.firstName}}</div>
+            <sn-avatar [image]="me.avatar?.url"
+                       [size]="ui.size.small"></sn-avatar>
+          </sn-stack>
+        </ng-template>
+
+        <ng-template #userbarMenuTemplate let-hide2="hide">
+          <sn-stack [align]="ui.align.stretch">
+            <sn-menu [orientation]="ui.orientation.vertical">
+              <sn-menu-item title="Logout"
+                            i18n-title="@@action.logout"
+                            [icon]="ui.icons.logout"
+                            (click)="logout();(hide1 || hide2)?.call()"></sn-menu-item>
+            </sn-menu>
+          </sn-stack>
+        </ng-template>
+      </sn-app-header-userbar>
+    </ng-template>
+
+  </sn-app-header>
+
+  <router-outlet></router-outlet>
+</sn-app-layout>

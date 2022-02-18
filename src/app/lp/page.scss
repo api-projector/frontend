@@ -1,0 +1,35 @@
+@import 'src/variables';
+@import "~@esanum/ui/lib/assets/styles/layout/grid";
+@import "~@esanum/ui/lib/assets/styles/layout/responsive";
+@import "~@esanum/ui/lib/assets/styles/layout/block";
+
+$sn-ng-deep: true;
+
+@include sn-grid-container((width: 450px, padding: 0)) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 $sn-gutter-normal $sn-gutter-large $sn-gutter-normal;
+  margin-top: 100px;
+  @include for-mobile() {
+    align-items: start;
+    padding: $sn-gutter-normal 0;
+  }
+}
+
+:host {
+  display: flex;
+  background: url(../../assets/images/lp/bg.svg);
+  background-size: cover;
+  position: absolute;
+  min-height: 100vh;
+  min-width: 100vw;
+  overflow: hidden;
+  @include sn-block((min-width: 400px));
+}
+
+h1 {
+  font-size: $sn-font-size-big;
+  color: $sn-primary-500-color;
+  font-weight: $sn-font-weight-extra-bold;
+}

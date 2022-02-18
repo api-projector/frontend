@@ -1,0 +1,24 @@
+<ng-container [formGroup]="form">
+  <ng-template #noSchemasTemplate>
+    <p>No schemas yet in spec.</p>
+  </ng-template>
+
+  <ng-template #noSchemaTemplate let-close="close" let-query="query">
+    <sn-button *ngIf="!!query;else noSchemasTemplate" [text]="'Add schema: ' + query"
+               (click)="addSchema(query)"></sn-button>
+  </ng-template>
+  <ng-template #headerTemplate>
+    <p>For creating write a name.</p>
+  </ng-template>
+  <sn-select #selectRef formControlName="schema"
+             placeholder="Find or create schema"
+             [width]="ui.width.fluid"
+             [context]="ui.context.popover"
+             [icon]="ui.icons.search"
+             [features]="[ui.feature.search]"
+             [emptyOptionsTemplate]="noSchemaTemplate"
+             [optionsHeaderTemplate]="headerTemplate">
+    <sn-select-option data-scheme *ngFor="let s of spec.schemas"
+                      [key]="s.id" [label]="s.name"></sn-select-option>
+  </sn-select>
+</ng-container>

@@ -1,0 +1,104 @@
+<sn-informer *ngIf="errors.length > 0"
+             [placement]="ui.placement.absolute"
+             [backdrop]="backdrop"
+             (ok)="this.errors = []">
+  <sn-informer-message *ngFor="let e of errors"
+                       [message]="e.toString()"></sn-informer-message>
+</sn-informer>
+
+<sn-container>
+  <sn-block #blockRef
+            [width]="ui.width.fluid"
+            [padding]="ui.gutter.large"
+            [spacing]="ui.gutter.large"
+            [features]="[ui.feature.adapted]">
+    <ng-template #blockHeaderTemplate>
+      <sn-stack [align]="ui.justify.center">
+        <a data-logo href="//www.apiprojector.com">
+          <img src="assets/images/logo.svg?v5" height="38">
+        </a>
+        <h1 i18n="@@label.login">Login</h1>
+      </sn-stack>
+    </ng-template>
+
+    <sn-form #formComponent
+             [formGroup]="form"
+             [state]="progress.login || progress.redirecting ? ui.state.loading : null"
+             (submitted)="login()">
+      <sn-stack [align]="ui.align.stretch">
+        <sn-form-item>
+          <sn-form-control name="email">
+            <sn-input #emailRef formControlName="email"
+                      placeholder="Email"
+                      i18n-placeholder="@@label.email"
+                      [icon]="ui.icons.user"></sn-input>
+            <sn-form-message [validator]="ui.validator.required"
+                             i18n="@@message.field_required">This field is required
+            </sn-form-message>
+            <sn-form-message [validator]="ui.validator.email"
+                             i18n="@@message.enter_valid_email">
+              Enter valid email
+            </sn-form-message>
+          </sn-form-control>
+        </sn-form-item>
+
+        <sn-form-item>
+          <sn-form-control name="password">
+            <sn-input formControlName="password"
+                      placeholder="Password"
+                      i18n-placeholder="@@label.password"
+                      [icon]="ui.icons.lock"
+                      [type]="ui.input.type.password"
+                      [snShortcuts]="[{key: ui.keyboard.key.enter, action: submit.bind(this)}]"></sn-input>
+            <sn-form-message [validator]="ui.validator.required"
+                             i18n="@@message.field_required">This field is required
+            </sn-form-message>
+          </sn-form-control>
+          <!--
+          <sn-link data-link
+                    title="Forgot password?"
+                    i18n-title="@@action.reset_password"
+                    [source]="['/reset-password']"></sn-link>
+          -->
+        </sn-form-item>
+
+      </sn-stack>
+
+      <ng-template #formFooterTemplate>
+        <sn-stack [align]="ui.align.stretch">
+          <sn-button text="Login"
+                     i18n-text="@@action.login"
+                     [icon]="ui.icons.login"
+                     [analytics]="{ goal: 'login' }"
+                     [type]="ui.button.type.submit">
+          </sn-button>
+          <p i18n="@@message.login_by">Or login by</p>
+          <sn-stack [orientation]="ui.orientation.horizontal"
+                    [gutter]="ui.gutter.small">
+            <sn-button text="Google"
+                       [icon]="ui.icons.google"
+                       [outline]="ui.outline.ghost"
+                       [width]="ui.width.fluid"
+                       [analytics]="{ goal: 'login_by_google' }"
+                       (click)="socialLogin(loginSystem.google)">
+            </sn-button>
+            <!--
+            <sn-button text="GitLab"
+                        [outline]="ui.outline.ghost"
+                        [icon]="ui.icons.gitlab"
+                        [width]="ui.width.fluid"
+                        (click)="socialLogin(loginSystem.gitLab)"></sn-button>
+            -->
+          </sn-stack>
+          <p i18n="@@message.have_no_account">Have no account yet?</p>
+          <sn-button text="Registration"
+                     i18n-text="@@action.register"
+                     [outline]="ui.outline.ghost"
+                     (click)="router.navigate(['/register'])">
+          </sn-button>
+        </sn-stack>
+      </ng-template>
+    </sn-form>
+  </sn-block>
+
+</sn-container>

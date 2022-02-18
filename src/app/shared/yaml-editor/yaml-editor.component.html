@@ -1,0 +1,51 @@
+<sn-form [formGroup]="form">
+  <sn-row>
+    <sn-col *ngIf="!!shortcutsTemplate" [span]="12">
+      <fieldset data-shortcuts [disabled]="!!building && !building.schema?.valid">
+        <sn-stack [orientation]="ui.orientation.horizontal">
+          <ng-container *ngTemplateOutlet="shortcutsTemplate"></ng-container>
+        </sn-stack>
+      </fieldset>
+    </sn-col>
+    <sn-col [tablet]="8">
+      <ngx-monaco-editor #editorRef data-editor
+                         [options]="consts.monaco"
+                         formControlName="yaml"></ngx-monaco-editor>
+    </sn-col>
+    <sn-col [tablet]="4">
+      <ng-container *ngIf="progress.validating;else validatedTemplate">
+        <p>Validating 🥁 your YAML ...</p>
+      </ng-container>
+      <ng-template #validatedTemplate>
+        <ng-template #invalidTemplate>
+          <sn-message [scheme]="ui.scheme.fail">
+            <sn-stack [align]="ui.align.stretch">
+              <sn-stack [align]="ui.align.center" [justify]="ui.justify.center">
+                <span data-state data-error>
+                  <sn-icon [icon]="localUi.icons.error" [color]="ui.color.white"></sn-icon>
+                </span>
+                <span>We can't save your YAML 😔</span>
+              </sn-stack>
+              <p *ngIf="!!building?.error">{{building?.error}}</p>
+              <ul data-errors>
+                <li *ngFor="let e of building?.schema?.errors">{{e.stack}}</li>
+              </ul>
+            </sn-stack>
+          </sn-message>
+        </ng-template>
+        <ng-container *ngIf="!!building">
+          <ng-container *ngIf="building?.schema?.valid;else invalidTemplate">
+            <sn-message [scheme]="ui.scheme.success">
+              <sn-stack [align]="ui.align.center" [justify]="ui.justify.center">
+                <span data-state data-success>
+                  <sn-icon [icon]="localUi.icons.check" [color]="ui.color.white"></sn-icon>
+                </span>
+                <span>Your YAML is valid 🥳</span>
+              </sn-stack>
+            </sn-message>
+          </ng-container>
+        </ng-container>
+      </ng-template>
+    </sn-col>
+  </sn-row>
+</sn-form>

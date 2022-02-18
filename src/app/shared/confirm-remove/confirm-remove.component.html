@@ -1,0 +1,30 @@
+<sn-stack data-confirm
+          [align]="ui.align.center">
+  <div data-outer-icon>
+    <div data-inner-icon>
+      <sn-icon [icon]="ui.icons.delete"
+               [size]="ui.size.large"></sn-icon>
+    </div>
+  </div>
+  <ng-container *ngIf="!!what">
+    <h4 data-title><strong>Delete {{ what }}?</strong></h4>
+    <p>Are you sure you want to delete this? This action cannot be undone.</p>
+  </ng-container>
+</sn-stack>
+
+<sn-stack [orientation]="ui.orientation.horizontal"
+          [spacing]="ui.gutter.large">
+  <sn-button text="Cancel"
+             i18n-text="@@action.cancel"
+             [icon]="ui.icons.close"
+             [outline]="ui.outline.ghost"
+             [width]="ui.width.fluid"
+             (click)="cancel()"></sn-button>
+  <sn-button text="Delete"
+             i18n-text="@@action.delete"
+             [icon]="ui.icons.delete"
+             [scheme]="ui.scheme.accent"
+             [outline]="ui.outline.fill"
+             [width]="ui.width.fluid"
+             (click)="confirm()"></sn-button>
+</sn-stack>

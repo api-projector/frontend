@@ -1,0 +1,12 @@
+@import "src/variables";
+@import "../common";
+
+$sn-ng-deep: true;
+
+:host {
+  display: block;
+}
+
+[data-path-method] {
+  min-width: 65px;
+}

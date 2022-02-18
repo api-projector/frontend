@@ -1,0 +1,79 @@
+<sn-block [width]="ui.width.fluid"
+          [padding]="ui.gutter.none"
+          [spacing]="ui.gutter.none">
+  <ng-template #blockHeaderTemplate>
+    <sn-stack [orientation]="ui.orientation.horizontal"
+              [padding]="ui.gutter.normal"
+              [align]="ui.align.center"
+              [justify]="ui.justify.between">
+      <sn-stack [orientation]="ui.orientation.horizontal"
+                [padding]="ui.gutter.none"
+                [align]="ui.align.center">
+        <div data-title-icon>
+          <sn-icon [icon]="localUi.icons.path"></sn-icon>
+        </div>
+        <sn-link title="Paths" [source]="['..', 'paths']"></sn-link>
+      </sn-stack>
+      <sn-button *ngIf="paths.length > 0"
+                 text="Add path"
+                 [icon]="ui.icons.add"
+                 [analytics]="{ goal: 'add_path_from_dashboard' }"
+                 (click)="addPath()"></sn-button>
+    </sn-stack>
+  </ng-template>
+
+  <ng-template #noPathsTemplate>
+    <sn-stack data-no-data
+              [align]="ui.align.center"
+              [padding]="ui.gutter.big">
+      <div data-outer-icon>
+        <div data-inner-icon>
+          <sn-icon [icon]="localUi.icons.path"
+                   [size]="ui.size.large"></sn-icon>
+        </div>
+      </div>
+      <p>API paths are addresses allow you to access to your backend</p>
+      <sn-button text="Add path"
+                 [icon]="ui.icons.add"
+                 [analytics]="{ goal: 'add_path_from_dashboard' }"
+                 (click)="addPath()"></sn-button>
+    </sn-stack>
+  </ng-template>
+
+  <ng-container *ngIf="paths.length > 0; else noPathsTemplate">
+    <sn-stack data-summary>
+      <sn-stack [orientation]="ui.orientation.horizontal">
+        <span data-quantity>{{ spec.paths.length }}</span>
+      </sn-stack>
+    </sn-stack>
+
+    <sn-stack [align]="ui.align.stretch"
+              [padding]="ui.gutter.normal">
+      <p data-last-updates>Last updates</p>
+      <sn-stack *ngFor="let path of paths"
+                [orientation]="ui.orientation.horizontal"
+                [justify]="ui.justify.between">
+        <sn-stack [orientation]="ui.orientation.horizontal"
+                  [align]="ui.align.center">
+          <sn-label data-path-method
+                    [features]="[]"
+                    [label]="path.method | uppercase"
+                    [size]="ui.size.small"
+                    [color]="path.method | methodColor"></sn-label>
+          <sn-link [title]="'/' + path.url"
+                   [icon]="{icon: ui.icons.link, position: ui.position.right}"
+                   (click)="router.navigate(['../paths', path.id], {relativeTo: route})"></sn-link>
+        </sn-stack>
+        <sn-stack data-path
+                  [orientation]="ui.orientation.horizontal"
+                  [align]="ui.align.center">
+          <span *ngIf="path.committed?.at as at">{{ at | formatDate:'relative' }}</span>
+          <sn-avatar [size]="ui.size.tiny"
+                     [image]="path.committed?.by?.avatar?.url"
+                     [name]="path.committed?.by?.firstName"
+                     [surname]="path.committed?.by?.lastName"></sn-avatar>
+        </sn-stack>
+      </sn-stack>
+    </sn-stack>
+  </ng-container>
+</sn-block>

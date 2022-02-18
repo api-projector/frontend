@@ -1,0 +1,89 @@
+<sn-form #formRef [formGroup]="form" (submitted)="save()">
+  <sn-stack [align]="ui.align.stretch">
+    <sn-form-item>
+      <sn-form-label i18n-placeholder="@@label.name">Name</sn-form-label>
+      <sn-form-control name="name">
+        <sn-input placeholder="Screen name"
+                  i18n-placeholder="@@label.screen_name"
+                  formControlName="name"></sn-input>
+        <!-- TODO: it does not work? Why?
+        [snShortcuts]="[{key: ui.keyboard.key.backspace, action: submitForm.apply(this)}]"
+        -->
+        <sn-form-message [validator]="ui.validator.required"
+                         i18n="@@message.field_required">
+          This field is required
+        </sn-form-message>
+      </sn-form-control>
+    </sn-form-item>
+
+    <sn-tabs>
+      <sn-tab title="Upload from local">
+        <ng-template #tabContentTemplate>
+          <sn-form-item>
+            <sn-form-control name="thumbnail">
+              <sn-image-uploader formControlName="thumbnail"
+                                 [width]="400"
+                                 [height]="200"
+                                 [uploader]="uploadThumbnail.bind(this)"
+                                 valueField="url"
+                                 urlField="url">
+              </sn-image-uploader>
+            </sn-form-control>
+          </sn-form-item>
+        </ng-template>
+      </sn-tab>
+
+      <sn-tab title="From Figma" [icon]="ui.icons.figma">
+        <ng-template #tabContentTemplate>
+          <sn-stack [align]="ui.align.stretch">
+            <sn-collapsible title="How to get link in Figma?"
+                            i18n-title="@@label.how_get_figma_link"
+                            [icon]="ui.icons.question">
+              <ng-template #collapsibleContentTemplate>
+                <ng-container [ngSwitch]="consts.language">
+                  <ng-container *ngSwitchDefault>
+                    <p>Select target frame in Figma</p>
+                    <img data-select-frame src="assets/images/figma/select_frame.png">
+                    <p>Press <b>share</b> in top right menu</p>
+                    <img data-press-share src="assets/images/figma/press_share.png">
+                    <p>Mark checkbox <b>Link to selected frame</b> and press <b>copy</b></p>
+                    <img data-get-link src="assets/images/figma/get_link.png">
+                  </ng-container>
+                  <ng-container *ngSwitchCase="language.ru">
+                    <p>Выбирите необходимый фрейм в Figma</p>
+                    <img data-select-frame src="assets/images/figma/select_frame.png">
+                    <p>Нажмите <b>поделиться</b> в верхнем правом меню</p>
+                    <img data-press-share src="assets/images/figma/press_share.png">
+                    <p>Отметьте <b>Ссылка на выбранный фрейм</b> и нажмите <b>копировать</b></p>
+                    <img data-get-link src="assets/images/figma/get_link.png">
+                  </ng-container>
+                </ng-container>
+              </ng-template>
+            </sn-collapsible>
+            <sn-form-item>
+              <sn-form-label i18n-placeholder="@@label.url">URL</sn-form-label>
+              <sn-form-control name="url">
+                <sn-input placeholder="Url of figma frame"
+                          i18n-placeholder="@@label.url_of_figma_frame"
+                          formControlName="url"></sn-input>
+                <sn-form-message [validator]="ui.validator.required"
+                                 i18n="@@message.field_required">
+                  This field is required
+                </sn-form-message>
+              </sn-form-control>
+            </sn-form-item>
+          </sn-stack>
+        </ng-template>
+      </sn-tab>
+    </sn-tabs>
+  </sn-stack>
+
+  <ng-template #formFooterTemplate>
+    <sn-stack [align]="ui.align.end">
+      <sn-button text="Save"
+                 i18n-text="@@action.save"
+                 [icon]="ui.icons.save"
+                 [type]="ui.button.type.submit"></sn-button>
+    </sn-stack>
+  </ng-template>
+</sn-form>

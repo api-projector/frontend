@@ -1,0 +1,14 @@
+@import "src/variables";
+@import "../common";
+@import "~@esanum/ui/lib/assets/styles/elements/label";
+
+$sn-ng-deep: true;
+
+:host {
+  display: block;
+}
+
+[data-paths] {
+  @include sn-label((corner: 15px, color: $sn-primary-500-color,
+    sizes: (small: (icon-size: 16px, font-size: 12px))), '&');
+}

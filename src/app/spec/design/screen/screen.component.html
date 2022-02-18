@@ -1,0 +1,165 @@
+<ng-template #selectPathTemplate let-close="close">
+  <sn-form data-select-path [formGroup]="point">
+    <sn-stack [gutter]="ui.gutter.huge"
+              [align]="ui.align.stretch">
+      <ng-container *ngIf="xControl.value">
+        <sn-stack [orientation]="ui.orientation.horizontal"
+                  [justify]="ui.justify.center"
+                  [gutter]="ui.gutter.small">
+          <div data-point formControlName="color"
+               *ngFor="let color of [ui.color.red, ui.color.green, ui.color.blue, ui.color.purple, ui.color.orange,
+             ui.color.primary500, ui.color.teal, ui.color.redDark, ui.color.purpleLight, ui.color.aquaLight]"
+               [snSelectable]="{value: color}"
+               [style.background-color]="color">
+          </div>
+        </sn-stack>
+      </ng-container>
+      <ng-container *ngIf="spec.paths.length > 0">
+        <app-select-path [spec]="screen.folder.spec"
+                         (selected)="modal.close();addPathRef($event)"></app-select-path>
+        <div style="text-align:center">or</div>
+      </ng-container>
+      <ng-template #formFooterTemplate>
+        <sn-button text="Create path"
+                   [width]="ui.width.fluid"
+                   [icon]="{position: ui.position.right, icon: ui.icons.arrowRight}"
+                   (click)="modal.close();createPath()"></sn-button>
+      </ng-template>
+    </sn-stack>
+  </sn-form>
+</ng-template>
+
+<sn-stack [align]="ui.align.stretch">
+
+  <sn-block [width]="ui.width.fluid"
+            [padding]="ui.gutter.none">
+    <sn-form [formGroup]="form">
+      <sn-table #table formControlName="table"
+                [fetcher]="fetchPaths.bind(this)">
+        <ng-template #tableActionsTemplate>
+          <sn-button text="Add path"
+                     [icon]="localUi.icons.path"
+                     (click)="point.reset();selectPathRef()"></sn-button>
+        </ng-template>
+        <sn-table-column width="50px">
+          <ng-template #tableCellTemplate let-point="point">
+            <div *ngIf="!!point" data-point
+                 [ngStyle]="{'background-color': point.color}"></div>
+          </ng-template>
+        </sn-table-column>
+        <sn-table-column i18n-title="@@label.method" title="Method" width="15%">
+          <ng-template #tableCellTemplate
+                       let-path="path">
+            <sn-label data-method [label]="path.method | uppercase"
+                      [features]="[]"
+                      [color]="path.method | methodColor"></sn-label>
+          </ng-template>
+        </sn-table-column>
+        <sn-table-column title="URL"
+                         i18n-title="@@label.path">
+          <ng-template #tableCellTemplate let-path="path">
+            <sn-link [title]="'/' + path.url"
+                     [icon]="{icon: ui.icons.link, position: ui.position.right}"
+                     [source]="[path.id]"></sn-link>
+          </ng-template>
+        </sn-table-column>
+        <sn-table-column title="Tags"
+                         i18n-title="@@label.tags">
+          <ng-template #tableCellTemplate let-path="path">
+            <sn-stack [orientation]="ui.orientation.horizontal"
+                      [gutter]="ui.gutter.small"
+                      [wrap]="ui.wrap.wrap"
+                      [spacing]="ui.gutter.small">
+              <sn-label *ngFor="let t of path.tags"
+                        [label]="t"
+                        [size]="ui.size.small"
+                        [color]="ui.color.primary400"></sn-label>
+            </sn-stack>
+          </ng-template>
+        </sn-table-column>
+        <sn-table-column title="Input →"
+                         i18n-title="@@label.input">
+          <ng-template #tableCellTemplate let-path="path">
+            <ng-container *ngIf="(path.json | resolveRefs:spec | async) as json">
+              <ng-container *ngIf="json?.requestBody?.content as content">
+                <ng-container *ngIf="content['application/json']?.schema as schema">
+                  <app-schema-tree [json]="schema"
+                                   [maxLevels]="0"
+                                   (selected)="gotoScheme($event)"></app-schema-tree>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-template>
+        </sn-table-column>
+        <sn-table-column title="← Output"
+                         i18n-title="@@label.output">
+          <ng-template #tableCellTemplate let-path="path">
+            <ng-container *ngIf="(path.json | resolveRefs:spec | async) as json">
+              <ng-container *ngIf="json?.responses['200']?.content as content">
+                <ng-container *ngIf="content['application/json']?.schema as schema">
+                  <app-schema-tree [json]="schema"
+                                   [maxLevels]="0"
+                                   (selected)="gotoScheme($event)"></app-schema-tree>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-template>
+        </sn-table-column>
+
+        <sn-table-column width="50px">
+          <ng-template #tableCellTemplate
+                       let-path="path">
+            <sn-avatar [size]="ui.size.tiny"
+                       [image]="path.committed?.by?.avatar?.url"
+                       [name]="path.committed?.by?.firstName"
+                       [surname]="path.committed?.by?.lastName"></sn-avatar>
+          </ng-template>
+        </sn-table-column>
+
+        <ng-template #tableRowActionsTemplate let-ref="row" let-hide="hide">
+          <sn-menu [orientation]="ui.orientation.vertical"
+                   [spacing]="ui.gutter.small">
+            <sn-menu-item [icon]="ui.icons.delete"
+                          title="Remove"
+                          i18n-title="@@action.remove"
+                          (click)="removePathRef(ref);hide()"></sn-menu-item>
+          </sn-menu>
+        </ng-template>
+
+      </sn-table>
+    </sn-form>
+  </sn-block>
+
+  <sn-block data-picture *ngIf="!!screen.thumbnail"
+            [width]="ui.width.fluid"
+            [padding]="ui.gutter.huge">
+    <sn-container>
+      <div #wrapperRef data-wrapper (click)="setPoint($event)">
+        <ng-container *ngFor="let r of screen.pathRefs">
+          <ng-template #pointTemplate>
+            <app-edit-comment [pathRef]="r"
+                              (updated)="commentUpdated()"
+                              (closed)="instance.popover?.hide()"></app-edit-comment>
+          </ng-template>
+          <div data-comment *ngIf="r.point as p"
+               [ngStyle]="{left: p.x + '%', top: p.y + '%'}"
+               [snPopover]="{position: ui.position.left, trigger: ui.trigger.click, contentTemplate: pointTemplate}"
+               (attached)="instance.popover = $event">
+            <div data-point [ngStyle]="{'background-color': p.color}"></div>
+            <sn-stack data-content [align]="ui.align.stretch"
+                      [gutter]="ui.gutter.none">
+              <div data-path
+                   [ngStyle]="{'background-color': p.color | hexToRGB, color: p.color | textBrightness}">{{r.path.method | uppercase}} /{{r.path.url}}</div>
+              <div *ngIf="!!r.comment"
+                   [ngStyle]="{'background-color': p.color, color: p.color | textBrightness}">{{r.comment}}</div>
+            </sn-stack>
+          </div>
+        </ng-container>
+      </div>
+      <img #thumbnailRef [src]="screen.thumbnail">
+    </sn-container>
+  </sn-block>
+
+</sn-stack>
+
+

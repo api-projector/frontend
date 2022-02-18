@@ -1,0 +1,66 @@
+<ng-template #tokenTemplate>
+  <sn-form [formGroup]="form"
+           [state]="progress.saving ? ui.state.loading : null"
+           (submitted)="save()">
+    <sn-row [align]="ui.align.end">
+      <sn-col [tablet]="8">
+        <sn-form-item formGroupName="figmaIntegration">
+          <sn-form-label i18n="@@label.figma_key">Figma key</sn-form-label>
+          <sn-form-control name="token">
+            <sn-input formControlName="token"
+                      placeholder="xxxxx-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></sn-input>
+          </sn-form-control>
+        </sn-form-item>
+      </sn-col>
+      <sn-col [tablet]="4">
+        <sn-button [type]="ui.button.type.submit"
+                   text="Save"
+                   i18n-text="@@action.save"
+                   [width]="ui.width.fluid"
+                   [icon]="ui.icons.save"
+                   [analytics]="{ goal: 'figma_token_saved' }"></sn-button>
+      </sn-col>
+    </sn-row>
+  </sn-form>
+</ng-template>
+
+<sn-message [scheme]="ui.scheme.secondary">
+  <ng-container [ngSwitch]="consts.language">
+    <ng-container *ngSwitchDefault>
+      <p>For <b>Figma</b> integration, please, follow with steps:</p>
+      <sn-timeline>
+        <sn-timeline-item title="Get Figma API token">
+          <ng-template #timelineItemContentTemplate>
+            <p>Go to your profile settings</p>
+            <img data-figma1 width="725" height="327" src="assets/images/figma/figma1.png">
+            <p>Make a new token with name <b>sp</b> and copy to clipboard</p>
+            <img data-figma2 width="640" height="625" src="assets/images/figma/figma2.png">
+          </ng-template>
+        </sn-timeline-item>
+        <sn-timeline-item title="Insert token on the form">
+          <ng-template #timelineItemContentTemplate>
+            <ng-container *ngTemplateOutlet="tokenTemplate"></ng-container>
+          </ng-template>
+        </sn-timeline-item>
+      </sn-timeline>
+    </ng-container>
+    <ng-container *ngSwitchCase="language.ru">
+      <p>Для настройки интеграции с <b>Figma</b> пожалуйста, выполните следующие шаги:</p>
+      <sn-timeline>
+        <sn-timeline-item title="Получите Figma API ключ">
+          <ng-template #timelineItemContentTemplate>
+            <p>Зайдите в настройки Вашего профиля</p>
+            <img data-figma1 width="725" height="327" src="assets/images/figma/figma1.png">
+            <p>Создайте новый ключ с именем <b>sp</b> и скопируйте его в буфер обмена</p>
+            <img data-figma2 width="640" height="625" src="assets/images/figma/figma2.png">
+          </ng-template>
+        </sn-timeline-item>
+        <sn-timeline-item title="Вставьте ключ в поле ниже">
+          <ng-template #timelineItemContentTemplate>
+            <ng-container *ngTemplateOutlet="tokenTemplate"></ng-container>
+          </ng-template>
+        </sn-timeline-item>
+      </sn-timeline>
+    </ng-container>
+  </ng-container>
+</sn-message>

@@ -1,0 +1,94 @@
+<sn-block [width]="ui.width.fluid">
+  <ng-template #blockHelpTemplate>
+    <p>Do you want to know more?</p>
+    <div style="width:100%;height:0;padding-bottom:45%;position:relative;">
+      <iframe src="https://giphy.com/embed/FqAwoNjVneJxK" width="100%" height="100%" style="position:absolute"
+              frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+    </div>
+    <p>Please check official <a href="https://swagger.io/specification/#schema-object" target="_blank">
+      Open API documentation</a>
+    </p>
+  </ng-template>
+
+  <sn-form [formGroup]="form">
+
+    <sn-stack [align]="ui.align.stretch">
+      <sn-form-item>
+        <sn-form-label for="name">Model name</sn-form-label>
+        <sn-form-control name="name">
+          <sn-input formControlName="name"
+                    placeholder="Your schema name"
+                    [width]="ui.width.fluid"></sn-input>
+          <sn-form-message [validator]="ui.validator.required">This field is required</sn-form-message>
+          <sn-form-message [validator]="'nameWithSpaces'">Name can't have spaces</sn-form-message>
+        </sn-form-control>
+      </sn-form-item>
+
+      <sn-collapsible title="Editor" [icon]="ui.icons.code"
+                      [opened]="mode === editMode.edit">
+        <ng-template #collapsibleContentTemplate>
+          <app-yaml-editor formControlName="editor"
+                           [schema]="consts.schema">
+            <ng-template #editorShortcutsTemplate>
+              <sn-stack [gutter]="ui.gutter.tiny">
+                <div data-section>Add property</div>
+                <sn-stack [orientation]="ui.orientation.horizontal"
+                          [gutter]="ui.gutter.tiny">
+                  <button (click)="addStringField()">
+                    String
+                  </button>
+                  <button (click)="addNumberField()">
+                    Number
+                  </button>
+                  <button (click)="addBooleanField()">
+                    Boolean
+                  </button>
+                  <button (click)="addEnumField()">
+                    Enum
+                  </button>
+                  <ng-template #selectSchemaTemplate>
+                    <app-select-schema [spec]="schema.spec"
+                                       (selected)="addSchemaField($event);instance?.popover?.hide()">
+                    </app-select-schema>
+                  </ng-template>
+                  <button type="button"
+                          [snPopover]="{contentTemplate: selectSchemaTemplate, behaviour: ui.behaviour.dropdown, trigger: ui.trigger.click, features: []}"
+                          (attached)="instance.popover = $event">
+                    Schema&nbsp;<sn-icon [icon]="ui.icons.chevronDown"></sn-icon>
+                  </button>
+                  <ng-template #selectArrayTemplate>
+                    <app-select-schema [spec]="schema.spec"
+                                       (selected)="addArrayField($event);instance?.popover?.hide()">
+                    </app-select-schema>
+                  </ng-template>
+                  <button type="button"
+                          [snPopover]="{contentTemplate: selectArrayTemplate, behaviour: ui.behaviour.dropdown, trigger: ui.trigger.click, features: []}"
+                          (attached)="instance.popover = $event">
+                    Array&nbsp;<sn-icon [icon]="ui.icons.chevronDown"></sn-icon>
+                  </button>
+                  <ng-template #selectOutputMapTemplate>
+                    <app-select-schema [spec]="schema.spec"
+                                       (selected)="setMapField($event);instance?.popover?.hide()">
+                    </app-select-schema>
+                  </ng-template>
+                  <button type="button"
+                          [snPopover]="{contentTemplate: selectOutputMapTemplate, behaviour: ui.behaviour.dropdown, trigger: ui.trigger.click, features: []}"
+                          (attached)="instance.popover = $event">
+                    Map&nbsp;<sn-icon [icon]="ui.icons.chevronDown"></sn-icon>
+                  </button>
+                </sn-stack>
+              </sn-stack>
+            </ng-template>
+          </app-yaml-editor>
+        </ng-template>
+      </sn-collapsible>
+
+      <div data-model>
+        <app-schema-tree [json]="schema.json | resolveRefs:schema.spec | async"
+                         (selected)="gotoScheme($event)"></app-schema-tree>
+      </div>
+
+    </sn-stack>
+
+  </sn-form>
+</sn-block>

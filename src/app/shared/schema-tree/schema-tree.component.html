@@ -1,0 +1,42 @@
+<span *ngIf="json?.type === 'array'">[&nbsp;</span>
+
+<a *ngIf="(json?.$ref || json?.ref$ || json?.items?.$ref || json?.items?.ref$) as ref"
+   [attr.data-active]="!!json?.id || !!json?.items?.id"
+   (click)="goto(json?.id || json?.items?.id)">{{ref | stripSchemaRef}}</a>
+
+<ng-template #simpleTypeTemplate><span data-value>{{json?.example || json?.type}}</span></ng-template>
+
+<ng-template #noTypeTemplate>Type is not specified</ng-template>
+
+<ng-container *ngIf="json?.type as type;else noTypeTemplate">
+  <ng-container *ngIf="type === 'object' || type === 'array' || !!json?.$ref;else simpleTypeTemplate">
+    <ng-template #maxLevelsReachedTemplate>&nbsp;⤵️</ng-template>
+    <ng-container *ngIf="level <= maxLevels;else maxLevelsReachedTemplate">
+      <!-- @formatter:off -->
+      <![CDATA[ {  ]]>
+  <div *ngFor="let p of (json?.properties || json?.items?.properties) | keyvalue:originalOrder">
+    <span data-key>{{p.key}}</span>:&nbsp;
+      <app-schema-tree [json]="p.value"
+                       [level]="level + 1"
+                       [maxLevels]="maxLevels"
+                       (selected)="selected.emit($event)"></app-schema-tree>
+    </div>
+    <div *ngIf="json?.additionalProperties as map">
+    <span data-key>*</span>:&nbsp;
+      <app-schema-tree [json]="map"
+                       [level]="level + 1"
+                       [maxLevels]="maxLevels"
+                       (selected)="selected.emit($event)"></app-schema-tree>
+    </div>
+  <![CDATA[ }  ]]>
+      <!-- @formatter:on -->
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<span *ngIf="json?.type === 'array'">&nbsp;, ...]</span>
+
+<!--
+<ng-template #simpleTypeTemplate><span data-value>{{p.value.example || p.value.type}}</span></ng-template>
+<ng-container *ngIf="!!p.value.$ref || p.value?.type === 'object' || p.value?.type === 'array';else simpleTypeTemplate">
+-->

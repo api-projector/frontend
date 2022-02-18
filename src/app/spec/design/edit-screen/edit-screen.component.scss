@@ -1,0 +1,34 @@
+@import "src/variables";
+@import "~@esanum/ui/lib/assets/styles/layout/responsive";
+
+:host {
+  display: block;
+  @include for-desktop() {
+    min-width: 400px;
+  }
+}
+
+p {
+  margin: $sn-gutter-normal 0;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  border-radius: $sn-corner-normal;
+}
+
+[data-select-frame] {
+  max-width: 360px;
+  max-height: 535px;
+}
+
+[data-press-share] {
+  max-width: 270px;
+  max-height: 115px;
+}
+
+[data-get-link] {
+  max-width: 485px;
+  max-height: 345px;
+}

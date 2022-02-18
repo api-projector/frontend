@@ -1,0 +1,93 @@
+@import "src/variables";
+@import "~@esanum/ui/lib/assets/styles/layout/responsive";
+
+$sn-ng-deep: true;
+$cap-size: 16px;
+
+:host {
+  display: block;
+}
+
+iframe {
+  pointer-events: none;
+}
+
+[data-controls] {
+  background-color: $sn-secondary-100-color;
+  padding: $sn-gutter-large;
+  border-radius: $sn-corner-normal;
+}
+
+[data-head] {
+  border-bottom: 1px solid $sn-white-color;
+
+  [data-column] {
+    color: $sn-gray-700-color;
+    padding: $sn-gutter-small 0;
+  }
+}
+
+[data-flow] {
+  position: relative;
+
+  [data-method] {
+    min-width: 7%;
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: $sn-white-color;
+    border-radius: $sn-corner-normal;
+    padding: 0 $sn-gutter-small;
+  }
+}
+
+[data-input], [data-output] {
+  background-color: $sn-secondary-100-color;
+  padding: $sn-gutter-normal;
+  border-radius: $sn-corner-small;
+  position: relative;
+  box-sizing: border-box;
+
+  @include min-for-tablet() {
+    height: 100%;
+  }
+
+  [data-required] {
+    margin-right: $sn-gutter-small;
+  }
+
+  [data-name], [data-description] {
+    color: $sn-primary-600-color;
+    font-weight: $sn-font-weight-bold;
+  }
+
+  [data-type] {
+    color: $sn-primary-300-color;
+  }
+
+  [data-in], [data-default] {
+    font-size: $sn-font-size-small;
+    color: $sn-primary-text-light-color;
+  }
+
+  svg {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+[data-model] {
+  cursor: pointer;
+}
+
+[data-section] {
+  font-size: 12px;
+  color: $sn-primary-text-light-color;
+}

@@ -1,0 +1,24 @@
+<sn-stack [formGroup]="form"
+          [align]="ui.align.center">
+  <div data-outer-icon>
+    <div data-inner-icon>
+      <sn-icon [icon]="ui.icons.share"
+               [size]="ui.size.large"></sn-icon>
+    </div>
+  </div>
+
+  <p>Send this link to your team members 🤟</p>
+
+  <sn-stack [align]="ui.align.stretch"
+            [width]="ui.width.fluid">
+    <sn-form-control name="link">
+      <sn-input formControlName="link"
+                [features]="ui.feature.copy"></sn-input>
+    </sn-form-control>
+  </sn-stack>
+
+  <sn-button text="Ok"
+             i18n-text="@@action.ok"
+             [icon]="ui.icons.checked"
+             (click)="close()"></sn-button>
+</sn-stack>

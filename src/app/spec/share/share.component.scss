@@ -1,0 +1,28 @@
+@import "src/variables";
+@import "~@esanum/ui/lib/assets/styles/layout/responsive";
+@import "~@esanum/ui/lib/assets/styles/navigation/link";
+@import "~@esanum/ui/lib/assets/styles/elements/icon";
+@import "~@esanum/ui/lib/assets/styles/overlays/modal";
+
+$sn-ng-deep: true;
+
+:host {
+  display: block;
+
+  @include min-for-tablet() {
+    min-width: 400px;
+  }
+}
+
+[data-outer-icon] {
+  padding: $sn-gutter-small;
+  background: $sn-secondary-100-color;
+  border-radius: 50%;
+
+  [data-inner-icon] {
+    padding: $sn-gutter-small;
+    background: $sn-secondary-200-color;
+    border-radius: 50%;
+    @include sn-icon((color: $sn-white-color));
+  }
+}

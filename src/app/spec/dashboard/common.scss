@@ -1,0 +1,42 @@
+@import "src/variables";
+@import "~@esanum/ui/lib/assets/styles/elements/icon";
+@import "~@esanum/ui/lib/assets/styles/navigation/link";
+
+[data-title-icon] {
+  padding: $sn-gutter-small;
+  background: $sn-secondary-100-color;
+  border-radius: 50%;
+  @include sn-icon((color: $sn-primary-500-color));
+}
+
+[data-no-data] {
+  text-align: center;
+
+  [data-outer-icon] {
+    padding: $sn-gutter-small;
+    background: $sn-secondary-100-color;
+    border-radius: 50%;
+
+    [data-inner-icon] {
+      padding: $sn-gutter-small;
+      background: $sn-secondary-200-color;
+      border-radius: 50%;
+      @include sn-icon((color: $sn-white-color));
+    }
+  }
+}
+
+[data-summary] {
+  background: $sn-secondary-100-color;
+  padding: 0 $sn-gutter-normal;
+
+  [data-quantity] {
+    color: $sn-primary-500-color;
+    font-size: 42px;
+    font-weight: $sn-font-weight-bold;
+  }
+}
+
+[data-last-updates] {
+  color: $sn-gray-700-color;
+}

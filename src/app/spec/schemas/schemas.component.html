@@ -1,0 +1,71 @@
+<sn-app-page-header title="Schemas"
+                    teaser="Your data transfer objects"
+                    [icon]="localUi.icons.schema"></sn-app-page-header>
+
+<sn-block [width]="ui.width.fluid"
+          [padding]="ui.gutter.none">
+  <sn-form [formGroup]="form">
+    <sn-table #table [features]="[ui.feature.search]"
+              formControlName="table"
+              [fetcher]="fetchSchemas.bind(this)">
+      <ng-template #tableActionsTemplate>
+        <sn-button text="Add schema"
+                   [icon]="ui.icons.add"
+                   [analytics]="{ goal: 'add_schema' }"
+                   (click)="addSchema()"></sn-button>
+      </ng-template>
+      <sn-table-column title="Name"
+                       i18n-title="@@label.path"
+                       width="250px">
+        <ng-template #tableCellTemplate let-id="id" let-name="name">
+          <sn-link [title]="name"
+                   [icon]="{icon: ui.icons.link, position: ui.position.right}"
+                   [source]="[id]"></sn-link>
+        </ng-template>
+      </sn-table-column>
+
+      <sn-table-column title="Fields"
+                       i18n-title="@@label.fields">
+        <ng-template #tableCellTemplate let-json="json">
+          <sn-stack [orientation]="ui.orientation.horizontal"
+                    [gutter]="ui.gutter.small"
+                    [wrap]="ui.wrap.wrap"
+                    [spacing]="ui.gutter.small">
+            <sn-label *ngFor="let p of json?.properties | keyvalue:originalOrder | slice:0:5"
+                      [label]="p.key"
+                      [size]="ui.size.small"
+                      [color]="ui.color.primary400"></sn-label>
+            <ng-container *ngIf="(json?.properties | keyvalue)?.length as length">
+              <sn-label *ngIf="length > 5"
+                        [label]="'+' + (length - 5)"
+                        [size]="ui.size.small"
+                        [color]="ui.color.yellow">
+              </sn-label>
+            </ng-container>
+          </sn-stack>
+        </ng-template>
+      </sn-table-column>
+
+      <sn-table-column width="50px">
+        <ng-template #tableCellTemplate
+                     let-committed="committed">
+          <sn-avatar [size]="ui.size.tiny"
+                     [image]="committed?.by?.avatar?.url"
+                     [name]="committed?.by?.firstName"
+                     [surname]="committed?.by?.lastName"></sn-avatar>
+        </ng-template>
+      </sn-table-column>
+
+      <ng-template #tableRowActionsTemplate let-schema="row" let-hide="hide">
+        <sn-menu [orientation]="ui.orientation.vertical"
+                 [spacing]="ui.gutter.small">
+          <sn-menu-item [icon]="ui.icons.delete"
+                        title="Remove"
+                        i18n-title="@@action.remove"
+                        (click)="removeSchema(schema);hide()"></sn-menu-item>
+        </sn-menu>
+      </ng-template>
+
+    </sn-table>
+  </sn-form>
+</sn-block>

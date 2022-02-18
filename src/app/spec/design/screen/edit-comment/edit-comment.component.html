@@ -1,0 +1,10 @@
+<sn-form [formGroup]="form">
+  <sn-stack [gutter]="ui.gutter.tiny">
+    <sn-input #inputRef formControlName="comment"
+              [size]="ui.size.small"
+              [features]="[ui.feature.multiline]"
+              [rows]="5"
+              [snShortcuts]="[{key: ui.keyboard.key.enter, action: close.bind(this)}]"></sn-input>
+    <small>Press <b>enter</b> to close</small>
+  </sn-stack>
+</sn-form>

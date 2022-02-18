@@ -1,0 +1,32 @@
+@import "src/variables";
+@import "~@esanum/ui/lib/assets/styles/layout/responsive";
+@import "~@esanum/ui/lib/assets/styles/elements/label";
+
+$sn-ng-deep: true;
+
+:host {
+  display: block;
+  min-width: 350px;
+  @include for-mobile() {
+    min-width: 100%;
+  }
+}
+
+[data-paths] {
+  height: 220px;
+  overflow: scroll ;
+  [data-path] {
+    cursor: pointer;
+    padding: $sn-gutter-tiny $sn-gutter-small;
+    border-radius: $sn-corner-small;
+    border: 1px solid $sn-gray-350-color;
+
+    &:hover {
+      background-color: $sn-secondary-100-color;
+    }
+  }
+}
+
+[data-method] {
+  min-width: 50px;
+}

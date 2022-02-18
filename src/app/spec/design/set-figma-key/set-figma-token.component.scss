@@ -1,0 +1,25 @@
+@import "src/variables";
+
+:host {
+  display: block;
+}
+
+p {
+  margin: $sn-gutter-normal 0;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  border-radius: $sn-corner-normal;
+}
+
+[data-figma1] {
+  max-width: 725px;
+  max-height: 327px;
+}
+
+[data-figma2] {
+  max-width: 640px;
+  max-height: 625px;
+}

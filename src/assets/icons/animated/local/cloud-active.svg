@@ -1,0 +1,22 @@
+<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    [syns] {
+      animation: rotate 1.5s linear normal infinite;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: translate(16px,17px) rotate(0deg);
+      }
+      100% {
+        transform: translate(16px,17px) rotate(360deg);
+      }
+    }
+  </style>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M8.43202 12.0907C5.18002 12.5347 2.66669 15.2934 2.66669 18.6667C2.66669 22.348 5.65202 25.3334 9.33335 25.3334H24C26.9454 25.3334 29.3334 22.9454 29.3334 20C29.3334 17.0547 26.9454 14.6667 24 14.6667C24 10.248 20.4187 6.66669 16 6.66669C12.484 6.66669 9.50535 8.93735 8.43202 12.0907Z" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <g syns="" transform="translate(16,17) rotate(0)">
+    <path transform="translate(-16,-17) rotate(0)" d="M15.7267 20.1107L14.8014 21.0374L15.7267 21.9627" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path transform="translate(-16,-17) rotate(0)" d="M16.2733 13.852L17.1987 12.9253L16.2733 12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path transform="translate(-16,-17) rotate(0)" d="M20 17C20 19.2091 18.2091 21 16 21M12 17C12 14.7909 13.7909 13 16 13" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>

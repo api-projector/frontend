@@ -1,0 +1,24 @@
+@import "src/variables";
+@import "~@esanum/ui/lib/assets/styles/elements/label";
+@import "~@esanum/ui/lib/assets/styles/layout/block";
+
+$sn-ng-deep: true;
+
+:host {
+  display: block;
+}
+
+[data-error] {
+  font-size: $sn-font-size-small;
+  color: $sn-warning-color;
+}
+
+[data-paths] {
+  @include sn-label((corner: 15px, color: $sn-primary-500-color,
+    sizes: (small: (icon-size: 16px, font-size: 12px))), '&');
+}
+
+[data-empty] {
+  @include sn-block((body: (padding: 100px 10px)));
+
+}

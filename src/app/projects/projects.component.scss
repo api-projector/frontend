@@ -1,0 +1,61 @@
+@import "src/variables";
+@import "~@esanum/ui/lib/assets/styles/layout/skeleton";
+@import "~@esanum/ui/lib/assets/styles/elements/picture";
+@import "~@esanum/ui/lib/assets/styles/elements/icon";
+@import "~@esanum/ui/lib/assets/styles/overlays/modal";
+
+$sn-ng-deep: true;
+
+@include sn-skeleton((card: (height: 150px)));
+
+:host {
+  display: block;
+
+  @include sn-picture((
+    placeholder: (
+     size: 60px
+  )));
+}
+
+a {
+  display: block;
+}
+
+span {
+  font-size: .9em;
+}
+
+@include sn-modal((
+  padding: (
+    top: $sn-gutter-big,
+    left: $sn-gutter-big,
+    right: $sn-gutter-big,
+    bottom: $sn-gutter-big
+  ),
+  title: (
+    padding: $sn-gutter-big $sn-gutter-big $sn-gutter-small,
+  )
+));
+
+[data-confirm] {
+  text-align: center;
+
+  [data-outer-icon] {
+    padding: $sn-gutter-small;
+    background: rgba(242, 95, 92, 0.2);
+    border-radius: 50%;
+
+    [data-inner-icon] {
+      padding: $sn-gutter-small;
+      background: $sn-accent-100-color;
+      border-radius: 50%;
+      @include sn-icon((color: $sn-white-color));
+    }
+  }
+
+  [data-title] {
+    font: {
+      weight: $sn-font-weight-bold;
+    }
+  }
+}

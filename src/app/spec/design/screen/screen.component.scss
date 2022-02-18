@@ -1,0 +1,87 @@
+@import "src/variables";
+@import "~@esanum/ui/lib/assets/styles/layout/grid";
+
+$sn-ng-deep: true;
+
+:host {
+  display: block;
+  position: relative;
+
+  @include sn-grid-container((width: 800px, padding: 0));
+
+  //TODO: @esanum-ui fix in mixin api
+  sn-block[data-picture] ::ng-deep {
+    background: $sn-white-color url("../../../../assets/images/substrate.svg");
+  }
+}
+
+[data-point] {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid $sn-white-color;
+  box-shadow: $sn-shadow-light;
+  box-sizing: border-box;
+}
+
+[data-select-path] {
+  [data-point] {
+    @extend [data-point];
+    cursor: pointer;
+
+    &[data-sn-selected=true] {
+      border-color: $sn-gray-700-color;
+    }
+  }
+}
+
+[data-wrapper] {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0);
+  cursor: crosshair;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+[data-comment] {
+  position: absolute;
+  z-index: 2;
+  cursor: pointer;
+  display: flex;
+
+  [data-content] {
+    margin-top: -3px;
+    margin-left: $sn-gutter-small;
+    font-size: $sn-font-size-base;
+    background-color: $sn-white-color;
+    box-shadow: 0 20px 24px -4px rgba(16, 24, 40, 0.1), 0px 8px 8px -4px rgba(16, 24, 40, 0.04);
+    border: 1px solid $sn-gray-350-color;
+    max-width: 300px;
+    border-radius: 0 $sn-corner-normal $sn-corner-normal $sn-corner-normal;
+    overflow: hidden;
+
+    div {
+      padding: 3px $sn-gutter-normal;
+
+      &[data-path] {
+        font-weight: $sn-font-weight-bold;
+        font-size: $sn-font-size-normal;
+        white-space: normal;
+      }
+    }
+  }
+}
+
+[data-method] {
+  min-width: 80px;
+}
+

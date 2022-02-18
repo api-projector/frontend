@@ -1,0 +1,18 @@
+@import 'src/variables';
+@import '~@esanum/ui/lib/assets/styles/elements/icon';
+@import '~@esanum/ui/lib/assets/styles/layout/card';
+@import '~@esanum/ui/lib/assets/styles/navigation/link';
+@import '~@esanum/ui/lib/assets/styles/layout/responsive';
+@import "../lp/page";
+
+$sn-ng-deep: true;
+
+[data-agree] {
+  cursor: pointer;
+  margin-top: -$sn-gutter-tiny;
+}
+
+[data-documents] {
+  padding-left: $sn-gutter-normal;
+  @include sn-link((font-size: $sn-font-size-small, icon: (size: 16px)));
+}

@@ -1,0 +1,72 @@
+<sn-informer *ngIf="errors.length > 0"
+             [backdrop]="backdrop"
+             [context]="ui.context.modal"
+             (ok)="this.errors = []">
+  <sn-informer-message *ngFor="let e of errors"
+                       [message]="e.toString()"></sn-informer-message>
+</sn-informer>
+
+<sn-form #content [formGroup]="form"
+         [state]="progress.saving ? ui.state.loading : null"
+         (submitted)="save()">
+
+  <ng-template #commonTemplate>
+    <sn-stack [align]="ui.align.stretch">
+      <sn-form-item>
+        <sn-form-control name="title">
+          <sn-form-label i18n="@@label.title">Title</sn-form-label>
+          <sn-input #titleInput formControlName="title"
+                    placeholder="CRM system for sales"
+                    i18n-placeholder="@@message.crm_system_for_sales"></sn-input>
+          <sn-form-message [validator]="ui.validator.required"
+                           i18n="@@message.field_is_required">Field is required
+          </sn-form-message>
+        </sn-form-control>
+      </sn-form-item>
+
+      <sn-form-control name="description">
+        <sn-form-label i18n="@@label.description">Description</sn-form-label>
+        <sn-input formControlName="description"
+                  placeholder="Nice CRM project"
+                  [features]="[ui.feature.multiline]"
+                  [rows]="3"></sn-input>
+      </sn-form-control>
+
+    </sn-stack>
+  </ng-template>
+
+  <sn-tabs>
+    <sn-tab title="Common"
+            i18n-title="@@label.common">
+      <ng-template #tabContentTemplate>
+        <ng-container *ngTemplateOutlet="commonTemplate"></ng-container>
+      </ng-template>
+    </sn-tab>
+    <sn-tab title="Integration"
+            i18n-title="@@label.integration">
+      <ng-template #tabContentTemplate>
+        <sn-stack [align]="ui.align.stretch">
+          <sn-form-item formGroupName="figmaIntegration">
+            <sn-form-label i18n="@@label.figma_key">Figma key</sn-form-label>
+            <sn-form-control name="token">
+              <sn-input formControlName="token"
+                        placeholder="xxxxx-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                        [features]="[ui.feature.allowEmpty]"></sn-input>
+            </sn-form-control>
+          </sn-form-item>
+        </sn-stack>
+      </ng-template>
+    </sn-tab>
+  </sn-tabs>
+
+  <ng-template #formFooterTemplate>
+    <sn-stack [orientation]="ui.orientation.horizontal"
+              [justify]="ui.justify.end">
+      <sn-button [type]="ui.button.type.submit"
+                 text="Save"
+                 i18n-text="@@action.save"
+                 [icon]="ui.icons.save"
+                 [analytics]="{ goal: 'save_project' }"></sn-button>
+    </sn-stack>
+  </ng-template>
+</sn-form>

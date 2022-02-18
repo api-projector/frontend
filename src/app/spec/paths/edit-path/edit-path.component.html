@@ -1,0 +1,362 @@
+<sn-block [width]="ui.width.fluid">
+  <ng-template #blockHelpTemplate>
+    <p>Do you want to know more?</p>
+    <div style="width:100%;height:0;padding-bottom:45%;position:relative;">
+      <iframe src="https://giphy.com/embed/FqAwoNjVneJxK" width="100%" height="100%" style="position:absolute"
+              frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+    </div>
+    <p>Please check official <a href="https://swagger.io/specification/#operation-object" target="_blank">
+      Open API documentation</a>
+    </p>
+  </ng-template>
+  <sn-form [formGroup]="form">
+    <sn-stack [align]="ui.align.stretch">
+      <div data-controls>
+        <sn-row>
+          <sn-col [tablet]="4" [wide]="2">
+            <sn-form-item>
+              <sn-form-control name="method">
+                <ng-template #methodOptionTemplate let-method="value">
+                  <sn-stack [orientation]="ui.orientation.horizontal"
+                            [align]="ui.align.center"
+                            [gutter]="ui.gutter.small">
+                    <sn-dot [color]="method | methodColor"></sn-dot>
+                    <div>{{method | uppercase}}</div>
+                  </sn-stack>
+                </ng-template>
+                <sn-select formControlName="method"
+                           [width]="ui.width.fluid"
+                           [optionTemplate]="methodOptionTemplate">
+                  <sn-select-option [key]="httpMethods.get"
+                                    [value]="httpMethods.get"></sn-select-option>
+                  <sn-select-option [key]="httpMethods.post"
+                                    [value]="httpMethods.post"></sn-select-option>
+                  <sn-select-option [key]="httpMethods.put"
+                                    [value]="httpMethods.put"></sn-select-option>
+                  <sn-select-option [key]="httpMethods.patch"
+                                    [value]="httpMethods.patch"></sn-select-option>
+                  <sn-select-option [key]="httpMethods.delete"
+                                    [value]="httpMethods.delete"></sn-select-option>
+                  <sn-select-option [key]="httpMethods.options"
+                                    [value]="httpMethods.options"></sn-select-option>
+                  <sn-select-option [key]="httpMethods.head"
+                                    [value]="httpMethods.head"></sn-select-option>
+                  <sn-select-option [key]="httpMethods.trace"
+                                    [value]="httpMethods.trace"></sn-select-option>
+                </sn-select>
+                <sn-form-message [validator]="ui.validator.required">This field is required</sn-form-message>
+              </sn-form-control>
+            </sn-form-item>
+          </sn-col>
+          <sn-col [tablet]="4" [wide]="5">
+            <sn-form-item>
+              <sn-form-control name="url">
+                <sn-input formControlName="url"
+                          placeholder="Absolute URL without /"
+                          [width]="ui.width.fluid"></sn-input>
+                <sn-form-message [validator]="ui.validator.required">This field is required</sn-form-message>
+                <sn-form-message [validator]="'urlWithSpaces'">URL can't have spaces</sn-form-message>
+              </sn-form-control>
+            </sn-form-item>
+          </sn-col>
+          <sn-col [tablet]="4" [wide]="5">
+            <sn-select formControlName="tags"
+                       placeholder="Tags"
+                       [width]="ui.width.fluid"
+                       [features]="[ui.feature.search]"
+                       [mode]="ui.select.mode.multiple"
+                       [creator]="addTag.bind(this)"
+                       [emptyOptionsTemplate]="emptyTags">
+              <sn-select-option *ngFor="let tag of created?.tags"
+                                [key]="tag"
+                                [label]="tag">
+              </sn-select-option>
+              <sn-select-option *ngFor="let tag of path?.tags"
+                                [key]="tag"
+                                [label]="tag">
+              </sn-select-option>
+              <sn-select-option *ngFor="let tag of path.spec | allTags"
+                                [key]="tag"
+                                [label]="tag">
+              </sn-select-option>
+            </sn-select>
+            <ng-template #emptyTags let-query="query" let-close="close">
+              <p>Press enter to add tag</p>
+            </ng-template>
+
+          </sn-col>
+        </sn-row>
+      </div>
+
+      <sn-collapsible title="Edit" [icon]="ui.icons.code"
+                      [opened]="mode === editMode.edit">
+        <ng-template #collapsibleContentTemplate>
+          <app-yaml-editor formControlName="editor"
+                           [schema]="consts.operation">
+            <ng-template #editorShortcutsTemplate>
+              <sn-stack [orientation]="ui.orientation.horizontal"
+                        [align]="ui.align.end"
+                        [gutter]="ui.gutter.big">
+
+                <sn-stack [gutter]="ui.gutter.tiny">
+                  <div data-section>Add input</div>
+                  <sn-stack [orientation]="ui.orientation.horizontal"
+                            [gutter]="ui.gutter.tiny">
+                    <ng-template #selectParameterTemplate>
+                      <sn-menu [orientation]="ui.orientation.vertical">
+                        <sn-menu-item title="Boolean"
+                                      [icon]="localUi.icons.boolean"
+                                      (click)="addBooleanParameter();instance?.popover?.hide()"></sn-menu-item>
+                        <sn-menu-item title="String"
+                                      [icon]="localUi.icons.string"
+                                      (click)="addStringParameter();instance?.popover?.hide()"></sn-menu-item>
+                        <sn-menu-item title="Number"
+                                      [icon]="localUi.icons.number"
+                                      (click)="addNumberParameter();instance?.popover?.hide()"></sn-menu-item>
+                        <sn-menu-item title="Enum"
+                                      [icon]="localUi.icons.enum"
+                                      (click)="addEnumParameter();instance?.popover?.hide()"></sn-menu-item>
+                      </sn-menu>
+                    </ng-template>
+                    <button
+                      [snPopover]="{contentTemplate: selectParameterTemplate, behaviour: ui.behaviour.dropdown, trigger: ui.trigger.click, features: []}"
+                      (attached)="instance.popover = $event">
+                      ? parameter
+                    </button>
+                    <ng-template #selectInputSchemaTemplate>
+                      <app-select-schema [spec]="path.spec"
+                                         (selected)="setInput($event);instance?.popover?.hide()">
+                      </app-select-schema>
+                    </ng-template>
+                    <button type="button"
+                            [snPopover]="{contentTemplate: selectInputSchemaTemplate, behaviour: ui.behaviour.dropdown, trigger: ui.trigger.click, features: []}"
+                            (attached)="instance.popover = $event">
+                      Schema&nbsp;<sn-icon [icon]="ui.icons.chevronDown"></sn-icon>
+                    </button>
+                  </sn-stack>
+                </sn-stack>
+
+                <sn-stack *ngIf="!path?.json?.responses
+                                 || !path?.json?.responses['200']
+                                 || !path?.json?.responses['401']
+                                 || !path?.json?.responses['404']"
+                          [gutter]="ui.gutter.tiny">
+                  <div data-section>Add response</div>
+                  <sn-stack [orientation]="ui.orientation.horizontal"
+                            [gutter]="ui.gutter.tiny">
+                    <button *ngIf="!path?.json?.responses || !path?.json?.responses['200']"
+                            type="button"
+                            (click)="add200()">
+                      <sn-stack [orientation]="ui.orientation.horizontal" [gutter]="ui.gutter.tiny"
+                                [align]="ui.align.center">
+                        <sn-dot [color]="localUi.colors.green"></sn-dot>
+                        <div>200</div>
+                      </sn-stack>
+                    </button>
+                    <button *ngIf="!path?.json?.responses || !path?.json?.responses['401']"
+                            type="button"
+                            (click)="add401()">
+                      <sn-stack [orientation]="ui.orientation.horizontal" [gutter]="ui.gutter.tiny"
+                                [align]="ui.align.center">
+                        <sn-dot [color]="ui.color.red"></sn-dot>
+                        <div>401</div>
+                      </sn-stack>
+                    </button>
+                    <button *ngIf="!path?.json?.responses || !path?.json?.responses['404']"
+                            type="button"
+                            (click)="add404()">
+                      <sn-stack [orientation]="ui.orientation.horizontal" [gutter]="ui.gutter.tiny"
+                                [align]="ui.align.center">
+                        <sn-dot [color]="ui.color.red"></sn-dot>
+                        <div>404</div>
+                      </sn-stack>
+                    </button>
+                  </sn-stack>
+                </sn-stack>
+
+                <sn-stack [gutter]="ui.gutter.tiny">
+                  <div data-section>Add output</div>
+                  <sn-stack [orientation]="ui.orientation.horizontal"
+                            [gutter]="ui.gutter.tiny">
+                    <ng-template #selectOutputSchemaTemplate>
+                      <app-select-schema [spec]="path.spec"
+                                         (selected)="setOutputSchema($event);instance?.popover?.hide()">
+                      </app-select-schema>
+                    </ng-template>
+                    <button type="button"
+                            [snPopover]="{contentTemplate: selectOutputSchemaTemplate, behaviour: ui.behaviour.dropdown, trigger: ui.trigger.click, features: []}"
+                            (attached)="instance.popover = $event">
+                      Schema&nbsp;<sn-icon [icon]="ui.icons.chevronDown"></sn-icon>
+                    </button>
+                    <ng-template #selectOutputArrayTemplate>
+                      <app-select-schema [spec]="path.spec"
+                                         (selected)="setOutputArray($event);instance?.popover?.hide()">
+                      </app-select-schema>
+                    </ng-template>
+                    <button type="button"
+                            [snPopover]="{contentTemplate: selectOutputArrayTemplate, behaviour: ui.behaviour.dropdown, trigger: ui.trigger.click, features: []}"
+                            (attached)="instance.popover = $event">
+                      Array&nbsp;<sn-icon [icon]="ui.icons.chevronDown"></sn-icon>
+                    </button>
+                    <ng-template #selectOutputMapTemplate>
+                      <app-select-schema [spec]="path.spec"
+                                         (selected)="setOutputMap($event);instance?.popover?.hide()">
+                      </app-select-schema>
+                    </ng-template>
+                    <button type="button"
+                            [snPopover]="{contentTemplate: selectOutputMapTemplate, behaviour: ui.behaviour.dropdown, trigger: ui.trigger.click, features: []}"
+                            (attached)="instance.popover = $event">
+                      Map&nbsp;<sn-icon [icon]="ui.icons.chevronDown"></sn-icon>
+                    </button>
+                    <ng-template #selectOutputPagingTemplate>
+                      <app-add-paging [spec]="path.spec"
+                      (selected)="setOutputPaging($event);instance?.popover?.hide()"></app-add-paging>
+                    </ng-template>
+                    <button type="button"
+                            [snPopover]="{contentTemplate: selectOutputPagingTemplate, behaviour: ui.behaviour.dropdown, trigger: ui.trigger.click, features: []}"
+                            (attached)="instance.popover = $event">
+                      Paging&nbsp;<sn-icon [icon]="ui.icons.chevronDown"></sn-icon>
+                    </button>
+                  </sn-stack>
+                </sn-stack>
+              </sn-stack>
+
+            </ng-template>
+          </app-yaml-editor>
+        </ng-template>
+      </sn-collapsible>
+
+      <ng-container *ngIf="(path?.json | resolveRefs:path?.spec | async) as json">
+        <sn-stack [align]="ui.align.stretch" [gutter]="ui.gutter.none">
+          <sn-row *snMinFor="ui.breakpoint.tablet">
+            <sn-col [tablet]="12">
+              <div data-flow>
+                <div data-method [style.background-color]="path.method | methodColor">{{path.method | uppercase}}</div>
+                <svg width="100%" height="30%" viewBox="0 0 1124 87" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="1124" height="87" fill="white"/>
+                  <!--block input-->
+                  <rect x="222" y="21" width="114" height="45" rx="8" fill="#BFE8EB"/>
+                  <text x="252" y="49" fill="#003E48" font-size="18" font-weight="700">Input</text>
+                  <!--block output-->
+                  <rect x="789" y="21" width="114" height="45" rx="8" fill="#BFE8EB"/>
+                  <text x="815" y="49" fill="#003E48" font-size="18" font-weight="700">Output</text>
+                  <!--left line-->
+                  <path d="M336 44L471.5 44C478.956 44 485 50.0442 485 57.5V57.5C485 64.9558 491.044 71 498.5 71L634 71"
+                        stroke="#BFE8EB" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 6"/>
+                  <path d="M632.5 63C632.5 63 634.5 67.6667 640.5 71C634.5 74.3333 632.5 79 632.5 79" stroke="#BFE8EB"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path
+                    d="M640.5 72C641.052 72 641.5 71.5523 641.5 71C641.5 70.4477 641.052 70 640.5 70V72ZM629.5 70C628.948 70 628.5 70.4477 628.5 71C628.5 71.5523 628.948 72 629.5 72V70ZM640.5 70H629.5V72H640.5V70Z"
+                    fill="#BFE8EB"/>
+                  <circle cx="336" cy="44" r="6.5" fill="white" stroke="#BFE8EB" stroke-width="3"/>
+                  <!--right line-->
+                  <path d="M492.5 24C492.5 24 490.5 19.3333 484.5 16C490.5 12.6667 492.5 8 492.5 8" stroke="#BFE8EB"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M789 43L653.5 43C646.044 43 640 36.9558 640 29.5V29.5C640 22.0442 633.956 16 626.5 16L491 16"
+                        stroke="#BFE8EB" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 6"/>
+                  <path
+                    d="M484.5 15C483.948 15 483.5 15.4477 483.5 16C483.5 16.5523 483.948 17 484.5 17V15ZM495.5 17C496.052 17 496.5 16.5523 496.5 16C496.5 15.4477 496.052 15 495.5 15V17ZM484.5 17H495.5V15H484.5V17Z"
+                    fill="#BFE8EB"/>
+                  <circle cx="789" cy="43" r="6.5" transform="rotate(-180 789 43)" fill="white" stroke="#BFE8EB"
+                          stroke-width="3"/>
+                  <!--right marker-->
+                  <path d="M834 66C839.891 66 843.333 76 846 76C848.667 76 852.109 66 858 66L834 66Z" fill="#BFE8EB"/>
+                  <!--left marker-->
+                  <path d="M267 66C272.891 66 276.333 76 279 76C281.667 76 285.109 66 291 66L267 66Z" fill="#BFE8EB"/>
+                </svg>
+              </div>
+            </sn-col>
+          </sn-row>
+
+          <sn-row [gutter]="ui.gutter.tiny" [align]="ui.align.stretch">
+            <sn-col [tablet]="6">
+              <h3 *snFor="ui.breakpoint.mobile">Input</h3>
+              <div data-input>
+                <sn-row>
+                  <sn-col data-head [span]="6">
+                    <div data-column>Name</div>
+                  </sn-col>
+                  <sn-col data-head [span]="6">
+                    <div data-column>Description</div>
+                  </sn-col>
+
+                  <ng-container *ngFor="let p of json.parameters">
+                    <sn-col [span]="6">
+                      <sn-stack [orientation]="ui.orientation.horizontal"
+                                [gutter]="ui.gutter.tiny"
+                                [align]="ui.align.center">
+                        <ng-container *ngIf="p.required">
+                          <sn-dot data-required [color]="ui.color.red"></sn-dot>
+                        </ng-container>
+                        <span data-name>{{p.name}}:</span><span data-type>{{p.schema.type}}</span>
+                      </sn-stack>
+                      <sn-stack [orientation]="ui.orientation.horizontal"
+                                [gutter]="ui.gutter.tiny"
+                                [align]="ui.align.center">
+                        <div data-in>{{p.in}}</div>
+                        <div *ngIf="p.schema?.default as default" data-default>| default: {{default}}</div>
+                      </sn-stack>
+                    </sn-col>
+                    <sn-col [span]="6">
+                      <span data-description>{{p.description}}</span>
+                    </sn-col>
+                  </ng-container>
+
+                  <ng-container *ngIf="json.requestBody?.content['application/json'].schema as schema">
+                    <sn-col data-head [tablet]="12">
+                      <div data-column>Body content</div>
+                    </sn-col>
+                    <sn-col>
+                      <app-schema-tree [json]="schema"
+                                       [maxLevels]="2"
+                                       (selected)="gotoScheme($event)"></app-schema-tree>
+                    </sn-col>
+                  </ng-container>
+                </sn-row>
+                <svg *snMinFor="ui.breakpoint.tablet" width="24" height="10" viewBox="0 0 24 10" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 10C5.89103 10 9.33332 -2.75246e-05 12 0C14.6667 2.75247e-05 18.109 10 24 10L0 10Z"
+                        fill="#E5F6F7"/>
+                </svg>
+              </div>
+            </sn-col>
+            <sn-col [tablet]="6">
+              <h3 *snFor="ui.breakpoint.mobile">Output</h3>
+              <div data-output>
+                <sn-row>
+                  <sn-col data-head [span]="3">
+                    <div data-column>Code</div>
+                  </sn-col>
+                  <sn-col data-head [span]="9">
+                    <div data-column>Description</div>
+                  </sn-col>
+                  <ng-container *ngFor="let r of json.responses | keyvalue:originalOrder">
+                    <sn-col [span]="3">
+                      <strong
+                        [ngStyle]="{'color': r.key === '200' ? ui.color.success : ui.color.red}">{{r.key}}</strong>
+                    </sn-col>
+                    <sn-col [span]="9">
+                      <span data-description>{{r.value['description']}}</span>
+                      <br>
+                      <ng-container *ngFor="let c of r.value?.content | keyvalue:originalOrder">
+                        <app-schema-tree *ngIf="c.value?.schema as schema"
+                                         [json]="schema"
+                                         [maxLevels]="2"
+                                         (selected)="gotoScheme($event)"></app-schema-tree>
+                      </ng-container>
+                    </sn-col>
+                  </ng-container>
+                </sn-row>
+                <svg *snMinFor="ui.breakpoint.tablet" width="24" height="10" viewBox="0 0 24 10" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 10C5.89103 10 9.33332 -2.75246e-05 12 0C14.6667 2.75247e-05 18.109 10 24 10L0 10Z"
+                        fill="#E5F6F7"/>
+                </svg>
+              </div>
+            </sn-col>
+          </sn-row>
+        </sn-stack>
+      </ng-container>
+    </sn-stack>
+  </sn-form>
+</sn-block>

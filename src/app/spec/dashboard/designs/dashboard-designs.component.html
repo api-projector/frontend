@@ -1,0 +1,90 @@
+<sn-block [width]="ui.width.fluid"
+          [padding]="ui.gutter.none"
+          [spacing]="ui.gutter.none">
+  <ng-template #blockHeaderTemplate>
+    <sn-stack [orientation]="ui.orientation.horizontal"
+              [padding]="ui.gutter.normal"
+              [align]="ui.align.center"
+              [justify]="ui.justify.between">
+      <sn-stack [orientation]="ui.orientation.horizontal"
+                [padding]="ui.gutter.none"
+                [align]="ui.align.center">
+        <div data-title-icon>
+          <sn-icon [icon]="localUi.icons.design"></sn-icon>
+        </div>
+        <sn-link title="Designs" [source]="['..', 'design']"></sn-link>
+      </sn-stack>
+      <sn-button *ngIf="screens.length > 0"
+                 text="Add design"
+                 [icon]="ui.icons.add"
+                 [analytics]="{ goal: 'add_design_from_dashboard' }"
+                 (click)="router.navigate(['../design'], {relativeTo: route})"></sn-button>
+    </sn-stack>
+  </ng-template>
+
+  <ng-template #noScreensTemplate>
+    <sn-stack data-no-data
+              [align]="ui.align.center"
+              [padding]="ui.gutter.big">
+      <div data-outer-icon>
+        <div data-inner-icon>
+          <sn-icon [icon]="localUi.icons.design"
+                   [size]="ui.size.large"></sn-icon>
+        </div>
+      </div>
+      <p>You can link frame with design from Figma or upload image</p>
+      <sn-button text="Add design"
+                 [icon]="ui.icons.add"
+                 [analytics]="{ goal: 'add_design_from_dashboard' }"
+                 (click)="router.navigate(['../design'], {relativeTo: route})"></sn-button>
+    </sn-stack>
+  </ng-template>
+
+  <ng-container *ngIf="screens.length > 0; else noScreensTemplate">
+    <sn-stack data-summary>
+      <sn-stack [orientation]="ui.orientation.horizontal">
+        <span data-quantity>{{ summary.screens }}</span>
+      </sn-stack>
+    </sn-stack>
+
+    <sn-stack [align]="ui.align.stretch"
+              [padding]="ui.gutter.normal">
+      <p data-last-updates>Last updates</p>
+      <sn-row>
+        <sn-col *ngFor="let screen of screens"
+                [tablet]="4"
+                [wide]="3">
+          <sn-card [title]="screen.name"
+                   [width]="ui.width.fluid"
+                   [features]="[ui.feature.clickable]"
+                   (selected)="gotoScreen(screen)">
+            <sn-stack [align]="ui.align.stretch">
+              <div>
+                <sn-picture [title]="screen.name"
+                            [src]="screen.thumbnail"
+                            height="150px"
+                            [fit]="ui.fit.width"
+                            [position]="ui.position.top"></sn-picture>
+              </div>
+              <ng-template #cardFooterTemplate>
+                <sn-stack [orientation]="ui.orientation.horizontal"
+                          [align]="ui.align.center"
+                          [justify]="ui.justify.between">
+                  <small>{{ screen.committed?.at | formatDate:'relative' }}</small>
+                  <sn-label *ngIf="screen.pathRefs.length > 0"
+                            data-paths
+                            [label]="screen.pathRefs.length"
+                            [color]="ui.color.secondary100"
+                            [icon]="localUi.icons.path"
+                            [size]="ui.size.small"></sn-label>
+                </sn-stack>
+              </ng-template>
+            </sn-stack>
+          </sn-card>
+        </sn-col>
+      </sn-row>
+    </sn-stack>
+  </ng-container>
+
+</sn-block>
+

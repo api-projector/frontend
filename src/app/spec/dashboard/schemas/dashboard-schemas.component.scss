@@ -1,0 +1,8 @@
+@import "src/variables";
+@import "../common";
+
+$sn-ng-deep: true;
+
+:host {
+  display: block;
+}

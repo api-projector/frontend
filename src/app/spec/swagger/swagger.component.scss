@@ -1,0 +1,16 @@
+@import "src/variables";
+
+:host {
+  display: block;
+}
+
+code {
+  display: block;
+  font-family: $sn-font-family-base;
+  font-weight: $sn-font-weight-bold;
+  padding: $sn-gutter-normal;
+  border-radius: $sn-corner-normal;
+  background: $sn-black-color;
+  color: $sn-white-color;
+  font-size: $sn-font-size-small;
+}

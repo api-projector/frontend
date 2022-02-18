@@ -1,0 +1,110 @@
+<ng-template #offlineModal>
+  <app-offline (ok)="close()"></app-offline>
+</ng-template>
+
+<ng-template #shareModal>
+  <app-share [link]="link" (ok)="close()"></app-share>
+</ng-template>
+
+<sn-app-aside #asideRef>
+  <sn-menu [orientation]="ui.orientation.vertical"
+           [gutter]="ui.gutter.tiny">
+    <sn-menu-item title="Dashboard"
+                  i18n-title="@@label.dashboard"
+                  [icon]="localUi.icons.dashboard"
+                  [link]="['dashboard']"
+                  [matching]="ui.matching.wildcard"></sn-menu-item>
+    <sn-menu-item title="Design"
+                  i18n-title="@@label.design"
+                  [icon]="localUi.icons.design"
+                  [link]="['design']"
+                  [matching]="ui.matching.wildcard"></sn-menu-item>
+    <sn-menu-item title="Paths"
+                  i18n-title="@@label.paths"
+                  [icon]="localUi.icons.path"
+                  [link]="['paths']"
+                  [matching]="ui.matching.wildcard"></sn-menu-item>
+    <sn-menu-item title="Schemas"
+                  i18n-title="@@label.schemas"
+                  [icon]="localUi.icons.schema"
+                  [link]="['schemas']"
+                  [matching]="ui.matching.wildcard"></sn-menu-item>
+    <sn-menu-item title="Swagger"
+                  i18n-title="@@label.swagger"
+                  [icon]="localUi.icons.swagger"
+                  [link]="['swagger']"
+                  [matching]="ui.matching.wildcard"></sn-menu-item>
+    <sn-menu-item title="Approving"
+                  [icon]="localUi.icons.approving"
+                  [disabled]="true"
+                  [matching]="ui.matching.wildcard">
+      <sn-badge text="soon" [color]="ui.color.yellow"></sn-badge>
+    </sn-menu-item>
+    <sn-menu-item title="Validation"
+                  [icon]="localUi.icons.validating"
+                  [disabled]="true"
+                  [matching]="ui.matching.wildcard">
+      <sn-badge text="soon" [color]="ui.color.yellow"></sn-badge>
+    </sn-menu-item>
+    <sn-menu-item title="Testing"
+                  [icon]="localUi.icons.testing"
+                  [disabled]="true"
+                  [matching]="ui.matching.wildcard">
+      <sn-badge text="soon" [color]="ui.color.yellow"></sn-badge>
+    </sn-menu-item>
+  </sn-menu>
+
+  <ng-template #asideFooterTemplate let-collapsed="collapsed">
+    <ng-template #cloudHelpTemplate>
+      <p>All your data will be saved<br> automatically in the cloud 😎</p>
+    </ng-template>
+    <sn-stack data-tools [align]="ui.align.center">
+      <sn-stack [orientation]="ui.orientation.horizontal">
+        <sn-button [text]="collapsed ? null : 'Share project'"
+                   [icon]="ui.icons.share"
+                   [shape]="collapsed ? ui.shape.circle : ui.shape.square"
+                   (click)="share()"></sn-button>
+      </sn-stack>
+      <div style="display:none;">
+        <sn-icon [icon]="localUi.icons.cloud.error"></sn-icon>
+      </div>
+      <div data-cloud [attr.data-error]="!online || (manager.state.remote$ | async) === replicationState.error"
+           [snPopover]="{contentTemplate: cloudHelpTemplate}">
+
+        <sn-icon *ngIf="!online;else onlineTemplate"
+                 [icon]="localUi.icons.cloud.offline"></sn-icon>
+        <ng-template #onlineTemplate>
+          <ng-container [ngSwitch]="manager.state.remote$ | async">
+            <sn-icon *ngSwitchCase="replicationState.active"
+                     [icon]="localUi.icons.cloud.active"></sn-icon>
+            <sn-icon *ngSwitchCase="replicationState.done"
+                     [icon]="localUi.icons.cloud.done"></sn-icon>
+            <ng-container *ngSwitchCase="replicationState.paused">
+              <ng-template #cloudDoneTemplate>
+                <sn-icon [icon]="localUi.icons.cloud.done"></sn-icon>
+              </ng-template>
+              <sn-icon *ngIf="(manager.state.dirty$ | async) > 0; else cloudDoneTemplate"
+                       [icon]="localUi.icons.cloud.dirty"></sn-icon>
+            </ng-container>
+            <sn-icon *ngSwitchCase="replicationState.error"
+                     [icon]="localUi.icons.cloud.error"></sn-icon>
+          </ng-container>
+        </ng-template>
+      </div>
+    </sn-stack>
+  </ng-template>
+</sn-app-aside>
+
+<sn-app-content [aside]="asideRef">
+  <sn-breadcrumb [aside]="asideRef"></sn-breadcrumb>
+
+  <sn-app-body>
+    <sn-container [width]="ui.width.fluid">
+      <router-outlet></router-outlet>
+    </sn-container>
+  </sn-app-body>
+
+  <sn-app-footer>
+    <small>Junte 2016 - 2022<br> Where teams make API specifications</small>
+  </sn-app-footer>
+</sn-app-content>

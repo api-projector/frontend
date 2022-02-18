@@ -1,0 +1,75 @@
+<sn-block [width]="ui.width.fluid"
+          [padding]="ui.gutter.none"
+          [spacing]="ui.gutter.none">
+  <ng-template #blockHeaderTemplate>
+    <sn-stack [orientation]="ui.orientation.horizontal"
+              [padding]="ui.gutter.normal"
+              [align]="ui.align.center"
+              [justify]="ui.justify.between">
+      <sn-stack [orientation]="ui.orientation.horizontal"
+                [padding]="ui.gutter.none"
+                [align]="ui.align.center">
+        <div data-title-icon>
+          <sn-icon [icon]="localUi.icons.schema"></sn-icon>
+        </div>
+        <sn-link title="Schemas" [source]="['..', 'schemas']"></sn-link>
+      </sn-stack>
+      <sn-button *ngIf="schemas.length > 0"
+                 text="Add schema"
+                 [icon]="ui.icons.add"
+                 [analytics]="{ goal: 'add_schema_from_dashboard' }"
+                 (click)="addSchema()"></sn-button>
+    </sn-stack>
+  </ng-template>
+
+  <ng-template #noSchemas>
+    <sn-stack data-no-data
+              [align]="ui.align.center"
+              [padding]="ui.gutter.big">
+      <div data-outer-icon>
+        <div data-inner-icon>
+          <sn-icon [icon]="localUi.icons.schema"
+                   [size]="ui.size.large"></sn-icon>
+        </div>
+      </div>
+      <p>Schemas are structures of data transferred by API</p>
+      <sn-button text="Add schema"
+                 [icon]="ui.icons.add"
+                 [analytics]="{ goal: 'add_schema_from_dashboard' }"
+                 (click)="addSchema()"></sn-button>
+    </sn-stack>
+  </ng-template>
+
+  <ng-container *ngIf="schemas.length > 0; else noSchemas">
+    <sn-stack data-summary>
+      <sn-stack [orientation]="ui.orientation.horizontal">
+        <span data-quantity>{{ spec.schemas.length }}</span>
+      </sn-stack>
+    </sn-stack>
+
+    <sn-stack [align]="ui.align.stretch"
+              [padding]="ui.gutter.normal">
+      <p data-last-updates>Last updates</p>
+      <sn-stack *ngFor="let schema of schemas"
+                [orientation]="ui.orientation.horizontal"
+                [justify]="ui.justify.between">
+        <sn-stack [orientation]="ui.orientation.horizontal"
+                  [align]="ui.align.center">
+          <sn-link [title]="schema.name"
+                   [icon]="{icon: ui.icons.link, position: ui.position.right}"
+                   (click)="router.navigate(['../schemas', schema.id], {relativeTo: route})"></sn-link>
+        </sn-stack>
+        <sn-stack [orientation]="ui.orientation.horizontal"
+                  [align]="ui.align.center">
+          <span *ngIf="schema.committed?.at as at">{{ at | formatDate:'relative' }}</span>
+          <sn-avatar [size]="ui.size.tiny"
+                     [image]="schema.committed?.by?.avatar?.url"
+                     [name]="schema.committed?.by?.firstName"
+                     [surname]="schema.committed?.by?.lastName"></sn-avatar>
+        </sn-stack>
+      </sn-stack>
+    </sn-stack>
+
+  </ng-container>
+
+</sn-block>

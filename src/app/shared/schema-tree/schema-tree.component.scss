@@ -1,0 +1,39 @@
+@import "src/variables";
+
+:host {
+  display: inline-block;
+}
+
+div {
+  margin-left: $sn-gutter-big;
+  display: flex;
+  align-items: flex-start;
+  font-weight: $sn-font-weight-bold;
+  color: $sn-primary-600-color;
+}
+
+a {
+  pointer-events: none;
+  color: $sn-primary-600-color;
+
+  &[data-active=true] {
+    cursor: pointer;
+    text-decoration: underline;
+    pointer-events: all;
+  }
+
+  &[data-active=false] {
+    color: $sn-red-dark-color;
+  }
+}
+
+[data-key] {
+  color: $sn-secondary-500-color;
+}
+
+[data-value] {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}

@@ -1,0 +1,23 @@
+<svg width="1920" height="1200" viewBox="0 0 1920 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1920" height="1200" fill="#F3F4FC"/>
+  <rect width="1920" height="1200" fill="url(#paint0_radial)"/>
+  <rect width="1920" height="1200" fill="url(#paint1_radial)" style="mix-blend-mode:overlay"/>
+  <rect width="1920" height="1200" fill="url(#paint2_radial)" style="mix-blend-mode:soft-light"/>
+  <defs>
+    <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                    gradientTransform="translate(1105.5 549.5) rotate(136.488) scale(1007.26 1050.39)">
+      <stop stop-color="#C4B7D9" stop-opacity="0"/>
+      <stop offset="0.794792" stop-color="#ECE3FB"/>
+    </radialGradient>
+    <radialGradient id="paint1_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                    gradientTransform="translate(410.5 863.5) rotate(30.5532) scale(646.223 632.594)">
+      <stop stop-color="#EE5D29"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="paint2_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                    gradientTransform="translate(435.5 240.5) rotate(52.2136) scale(737.694 1180.31)">
+      <stop stop-color="#16CFF0"/>
+      <stop offset="0.917598" stop-color="#CAE1E6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>

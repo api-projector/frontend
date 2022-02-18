@@ -1,0 +1,117 @@
+<ng-template #removeProjectModal>
+  <app-confirm-remove [what]="this.removing.project.title"
+                      (confirmed)="remove()"
+                      (canceled)="close()"></app-confirm-remove>
+</ng-template>
+
+<sn-app-content>
+  <sn-app-body>
+    <sn-container>
+      <sn-app-page-header [icon]="localUi.icons.project"
+                          title="Your projects"
+                          i18n-title="@@label.your_projects"
+                          teaser="for creating specifications"
+                          i18n-teaser="@@message.projects_teaser">
+        <ng-template #headerActionsTemplate>
+          <sn-button text="Add project"
+                     i18n-text="@@action.add_project"
+                     [icon]="ui.icons.add"
+                     [shape]="ui.shape.circle"
+                     (click)="add()"
+                     [analytics]="{ goal: 'add_project' }">
+          </sn-button>
+        </ng-template>
+      </sn-app-page-header>
+
+      <sn-stack [align]="ui.align.stretch">
+        <ng-template #noDataTemplate>
+          <sn-row *ngIf="progress.loading;else emptyDateTemplate">
+            <sn-col [mobile]="6" [tablet]="3" *ngFor="let i of 8 | mockArray">
+              <sn-skeleton [type]="ui.skeleton.type.card"></sn-skeleton>
+            </sn-col>
+          </sn-row>
+
+          <ng-template #emptyDateTemplate>
+            <sn-empty message="No projects yet" i18n-message="@@message.no_projects">
+              <ng-template #emptyImageTemplate>
+                <!-- @formatter:off -->
+                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 60C0 26.8629 26.8629 0 60 0C93.1371 0 120 26.8629 120 60C120 93.1371 93.1371 120 60 120C26.8629 120 0 93.1371 0 60Z" fill="#BFE8EB"/>
+                  <path d="M66.3639 46.6359L65.7275 47.2723" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M69 53H68.1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M51.9 53H51" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M54.2723 47.2723L53.6359 46.6359" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M60 44.9V44" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M59.9999 48.5C57.8506 48.4919 55.9385 49.8632 55.2569 51.9015C54.5754 53.9399 55.2781 56.1855 56.9999 57.4718" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M60 48.5C62.1492 48.4919 64.0613 49.8631 64.7429 51.9014C65.4245 53.9397 64.7219 56.1854 63.0001 57.4717" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M57 57.4718V59.0001C57 59.5523 57.4477 60.0001 58 60.0001H62C62.5523 60.0001 63 59.5523 63 59.0001V57.4717" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M57.5 63H62.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M68.19 73.6175L69.3075 71.3825C69.7325 70.535 70.5975 70 71.545 70H82.5C83.88 70 85 71.12 85 72.5V77.5C85 80.2625 82.7625 82.5 80 82.5H40C37.2375 82.5 35 80.2625 35 77.5V72.5C35 71.12 36.12 70 37.5 70H48.455C49.4025 70 50.2675 70.535 50.69 71.3825L51.8075 73.6175C52.2325 74.465 53.0975 75 54.045 75H65.955C66.9025 75 67.7675 74.465 68.19 73.6175Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M82.5 70V42.5C82.5 39.7375 80.2625 37.5 77.5 37.5H42.5C39.7375 37.5 37.5 39.7375 37.5 42.5V70" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <!-- @formatter:on -->
+              </ng-template>
+              <ng-template #emptyDescriptionTemplate>
+                <sn-stack [padding]="ui.gutter.normal"
+                          [orientation]="ui.orientation.horizontal"
+                          [align]="ui.align.center">
+                  <sn-button text="Add" i18n-text="@@action.add"
+                             [icon]="ui.icons.add"
+                             (click)="add()"></sn-button>
+                  <p i18n="@@message.your_first_project">your first project now!</p>
+                </sn-stack>
+              </ng-template>
+            </sn-empty>
+          </ng-template>
+        </ng-template>
+
+        <ng-container *ngIf="projects.length > 0; else noDataTemplate">
+          <sn-row>
+            <sn-col [mobile]="6" [tablet]="3"
+                    *ngFor="let project of projects; trackBy: trackProject;let i = index">
+              <ng-template #cardPictureTemplate>
+                <a [routerLink]="[project.id]">
+                  <sn-picture height="100px"
+                              [src]="project.emblem?.url"
+                              [icon]="localUi.icons.emblem"
+                              [title]="project.title"></sn-picture>
+                </a>
+              </ng-template>
+              <sn-card [width]="ui.width.fluid"
+                       [orientation]="ui.orientation.vertical"
+                       [picture]="{template: cardPictureTemplate}">
+                <sn-stack [gutter]="ui.gutter.tiny">
+                  <sn-link [source]="[project.id]"
+                           [title]="project.title"></sn-link>
+                  <span *ngIf="!!project.description">{{project.description}}</span>
+                </sn-stack>
+                <ng-template #cardActionsTemplate let-hide="hide">
+                  <sn-menu [orientation]="ui.orientation.vertical">
+                    <sn-menu-item [icon]="ui.icons.edit"
+                                  title="Edit"
+                                  i18n-title="@@action.edit"
+                                  (click)="edit(project, i);hide()">
+                    </sn-menu-item>
+                    <!--
+                    <sn-menu-item [icon]="ui.icons.question"
+                                  title="Tools"
+                                  i18n-title="@@action.tools"
+                                  [link]="[project.id, 'tools']"
+                                  (click)="hide()">
+                    </sn-menu-item>
+                    -->
+                    <sn-menu-item [icon]="ui.icons.delete"
+                                  title="Delete"
+                                  i18n-title="@@action.delete"
+                                  (click)="confirmRemove(project);hide()">
+                    </sn-menu-item>
+                  </sn-menu>
+                </ng-template>
+              </sn-card>
+            </sn-col>
+          </sn-row>
+        </ng-container>
+      </sn-stack>
+    </sn-container>
+  </sn-app-body>
+</sn-app-content>

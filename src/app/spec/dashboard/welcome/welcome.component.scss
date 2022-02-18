@@ -1,0 +1,10 @@
+@import "src/variables";
+
+:host {
+  display: block;
+}
+
+iframe {
+  border: none;
+  border-radius: $sn-corner-normal;
+}

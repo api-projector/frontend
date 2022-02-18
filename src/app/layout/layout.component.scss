@@ -1,0 +1,23 @@
+@import 'src/variables';
+@import '~@esanum/ui/lib/assets/styles/forms/button';
+
+$sn-ng-deep: true;
+
+:host {
+  display: block;
+}
+
+[data-me] {
+  color: white;
+  font-weight: bold;
+}
+
+a, img {
+  display: block;
+}
+
+[data-support] {
+  @include sn-button((
+    background: linear-gradient(to right, #f857a6 0%, #ff5858  51%, #f857a6  100%)
+  ), '&');
+}

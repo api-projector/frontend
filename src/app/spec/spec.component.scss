@@ -1,0 +1,24 @@
+@import "src/variables";
+@import "~@esanum/ui/lib/assets/styles/elements/icon";
+
+$sn-ng-deep: true;
+
+:host {
+  display: block;
+}
+
+[data-tools] {
+  padding: $sn-gutter-normal;
+}
+
+[data-cloud] {
+  padding: $sn-gutter-small;
+  background: $sn-primary-100-color;
+  border-radius: 50%;
+  @include sn-icon((color: $sn-primary-500-color));
+
+  &[data-error=true] {
+    background: $sn-warning-color;
+    @include sn-icon((color: $sn-white-color));
+  }
+}

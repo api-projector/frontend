@@ -1,0 +1,99 @@
+<sn-app-page-header title="Paths"
+                    teaser="Your API endpoints"
+                    [icon]="localUi.icons.path"></sn-app-page-header>
+
+<sn-block [width]="ui.width.fluid"
+          [padding]="ui.gutter.none">
+  <sn-form [formGroup]="form">
+    <sn-table #table [features]="[ui.feature.search]"
+              formControlName="table" [fetcher]="fetchPaths.bind(this)">
+      <ng-template #tableActionsTemplate>
+        <sn-button text="Add path"
+                   [icon]="ui.icons.add"
+                   [analytics]="{ goal: 'add_path' }"
+                   (click)="addPath()"></sn-button>
+      </ng-template>
+      <sn-table-column i18n-title="@@label.method" title="Method" width="15%">
+        <ng-template #tableCellTemplate
+                     let-method="method">
+          <sn-label data-method [label]="method | uppercase"
+                    [features]="[]"
+                    [color]="method | methodColor"></sn-label>
+        </ng-template>
+      </sn-table-column>
+      <sn-table-column title="URL"
+                       i18n-title="@@label.path">
+        <ng-template #tableCellTemplate let-id="id" let-url="url">
+          <sn-link [title]="'/' + url"
+                   [icon]="{icon: ui.icons.link, position: ui.position.right}"
+                   [source]="[id]"></sn-link>
+        </ng-template>
+      </sn-table-column>
+      <sn-table-column title="Tags"
+                       i18n-title="@@label.tags">
+        <ng-template #tableCellTemplate let-tags="tags">
+          <sn-stack [orientation]="ui.orientation.horizontal"
+                    [gutter]="ui.gutter.small"
+                    [wrap]="ui.wrap.wrap"
+                    [spacing]="ui.gutter.small">
+            <sn-label *ngFor="let t of tags"
+                      [label]="t"
+                      [size]="ui.size.small"
+                      [color]="ui.color.primary400"></sn-label>
+          </sn-stack>
+        </ng-template>
+      </sn-table-column>
+      <sn-table-column title="Input&nbsp;→"
+                       i18n-title="@@label.input">
+        <ng-template #tableCellTemplate let-raw="json">
+          <ng-container *ngIf="(raw | resolveRefs:spec | async) as json">
+            <ng-container *ngIf="json?.requestBody?.content as content">
+              <ng-container *ngIf="content['application/json']?.schema as schema">
+                <app-schema-tree [json]="schema"
+                                 [maxLevels]="0"
+                                 (selected)="gotoScheme($event)"></app-schema-tree>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-template>
+      </sn-table-column>
+      <sn-table-column title="←&nbsp;Output"
+                       i18n-title="@@label.output">
+        <ng-template #tableCellTemplate let-raw="json">
+          <ng-container *ngIf="(raw | resolveRefs:spec | async) as json">
+            <ng-container *ngIf="json?.responses as responses">
+              <ng-container *ngIf="responses['200']?.content as content">
+                <ng-container *ngIf="content['application/json']?.schema as schema">
+                  <app-schema-tree [json]="schema"
+                                   [maxLevels]="0"
+                                   (selected)="gotoScheme($event)"></app-schema-tree>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-template>
+      </sn-table-column>
+
+      <sn-table-column width="50px">
+        <ng-template #tableCellTemplate
+                     let-committed="committed">
+          <sn-avatar [size]="ui.size.tiny"
+                     [image]="committed?.by?.avatar?.url"
+                     [name]="committed?.by?.firstName"
+                     [surname]="committed?.by?.lastName"></sn-avatar>
+        </ng-template>
+      </sn-table-column>
+
+      <ng-template #tableRowActionsTemplate let-path="row" let-hide="hide">
+        <sn-menu [orientation]="ui.orientation.vertical"
+                 [spacing]="ui.gutter.small">
+          <sn-menu-item [icon]="ui.icons.delete"
+                        title="Remove"
+                        i18n-title="@@action.remove"
+                        (click)="removePath(path);hide()"></sn-menu-item>
+        </sn-menu>
+      </ng-template>
+
+    </sn-table>
+  </sn-form>
+</sn-block>

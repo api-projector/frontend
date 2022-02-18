@@ -1,0 +1,65 @@
+@import "~swagger-ui/dist/swagger-ui.css";
+@import "./variables";
+@import "~@esanum/ui/lib/assets/styles/sn-all";
+@import "~@esanum/ui/lib/assets/styles/sn-common";
+
+@include sn-icon((stroke: 1.5px));
+@include sn-dot((size: 8px));
+@include sn-app-page-header((icon: (color: $sn-primary-500-color)));
+@include sn-button((corner: $sn-corner-normal));
+@include sn-message((schemes: (fail: (border-color: transparent), success: (border-color: transparent))));
+@include sn-select((sizes: (
+  normal: (
+    padding: 2px $sn-gutter-small,
+    font-size: 14px,
+    height: 38px,
+    chips: (
+      padding: 1px $sn-gutter-tiny 1px $sn-gutter-small
+    ),
+    input: (
+      padding: 0 0 0 $sn-gutter-small
+    ),
+    state-icon: 16px
+  ))));
+@include sn-input((sizes: (
+  normal: (
+    font-size: 14px,
+    height: 38px,
+    icon: 14px,
+    chevron: 10px,
+    state-icon: 18px,
+    padding: $sn-gutter-tiny $sn-gutter-normal
+  ))));
+
+@include sn-label((corner: $sn-corner-small,
+  color: $sn-white-color,
+  sizes: (
+    small: (
+      font-size: 12px
+    ),
+    normal: (
+      padding: 6px $sn-gutter-small,
+      font-size: 14px
+    )
+  )));
+
+.swagger-ui {
+  font-family: 'Open Sans';
+
+  &.parameter__name {
+    font-family: 'Open Sans';
+  }
+
+  & .opblock .opblock-summary-path {
+    font-family: $sn-font-family-base;
+    font-size: 18px;
+  }
+}
+
+
+body {
+  font-family: $sn-font-family-base;
+  font-weight: $sn-font-weight-light;
+  font-size: $sn-font-size-normal;
+  color: $sn-primary-text-color;
+}

@@ -1,0 +1,12 @@
+@import "src/variables";
+
+:host {
+  display: block;
+  width: 300px;
+}
+
+p {
+  font-size: small;
+  margin: 0;
+  color: $sn-gray-700-color;
+}

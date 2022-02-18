@@ -1,0 +1,14 @@
+<sn-block [width]="ui.width.fluid">
+  <p>
+    Your Open API specification is updating in real time 🚀, please download
+    <a target="_blank" href="/projects/{{project.id}}/export/openapi.json">JSON</a>
+    or
+    <a target="_blank" href="/projects/{{project.id}}/export/openapi.yaml">YAML</a>
+  </p>
+  <p>Also, you can integrate it to your CI/CD workflow:</p>
+  <code>
+    $ curl {{consts.baseUri}}/projects/{{project.id}}/export/openapi.json > openapi.json
+  </code>
+</sn-block>
+
+<div id="swaxgger_ui"></div>

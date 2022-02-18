@@ -1,0 +1,22 @@
+<sn-app-page-header title="Dashboard"
+                    teaser="for your specification summary"
+                    [icon]="localUi.icons.dashboard"></sn-app-page-header>
+
+<sn-row>
+  <sn-col *ngIf="!widgets.welcome" [desktop]="12" [tablet]="12">
+    <sn-row>
+      <sn-col [desktop]="8" [tablet]="10">
+        <app-welcome (ok)="hello()"></app-welcome>
+      </sn-col>
+    </sn-row>
+  </sn-col>
+  <sn-col [desktop]="6" [tablet]="12">
+    <app-dashboard-paths [spec]="spec"></app-dashboard-paths>
+  </sn-col>
+  <sn-col [desktop]="6" [tablet]="12">
+    <app-dashboard-schemas [spec]="spec"></app-dashboard-schemas>
+  </sn-col>
+  <sn-col [desktop]="12">
+    <app-dashboard-designs [spec]="spec"></app-dashboard-designs>
+  </sn-col>
+</sn-row>

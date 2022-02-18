@@ -1,0 +1,9 @@
+@import "src/variables";
+
+:host {
+  display: block;
+}
+
+[data-method] {
+  min-width: 80px;
+}

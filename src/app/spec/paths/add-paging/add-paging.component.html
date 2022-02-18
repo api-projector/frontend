@@ -1,0 +1,17 @@
+<sn-stack [formGroup]="form"
+          [align]="ui.align.stretch">
+  <sn-switcher formControlName="type">
+    <sn-switcher-option
+      label="Array"
+      [value]="pagingType.array">
+      <sn-dot [color]="ui.color.green"></sn-dot>
+    </sn-switcher-option>
+    <sn-switcher-option
+      label="Map"
+      [value]="pagingType.map">
+      <sn-dot [color]="ui.color.red"></sn-dot>
+    </sn-switcher-option>
+  </sn-switcher>
+  <app-select-schema [spec]="spec"
+                     (selected)="selected.emit(getCode($event))"></app-select-schema>
+</sn-stack>

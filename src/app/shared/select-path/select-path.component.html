@@ -1,0 +1,36 @@
+<ng-template #noPathsTemplate>
+  <p>No paths yet</p>
+</ng-template>
+
+<ng-template #notFoundTemplate>
+  <p>Paths not found</p>
+</ng-template>
+<sn-stack *ngIf="spec.paths.length > 0;else noPathsTemplate"
+          [align]="ui.align.stretch"
+          [gutter]="ui.gutter.small">
+  <ng-container [formGroup]="form">
+    <sn-input formControlName="query" placeholder="Find path..."
+              [icon]="ui.icons.search"
+              [size]="ui.size.small"
+              [width]="ui.width.fluid"></sn-input>
+    <div data-paths
+         *ngIf="(!!queryControl.value ? (spec.paths | filterPaths:queryControl.value) : (spec.paths | slice:0:10)) as paths">
+      <sn-stack *ngIf="paths.length > 0;else notFoundTemplate"
+                [align]="ui.align.stretch"
+                [gutter]="ui.gutter.small">
+        <sn-stack data-path
+                  *ngFor="let path of paths"
+                  [orientation]="ui.orientation.horizontal"
+                  [align]="ui.align.center"
+                  [gutter]="ui.gutter.small"
+                  (click)="selected.emit(path)">
+          <sn-label data-method [label]="path.method | uppercase"
+                    [features]="[]"
+                    [size]="ui.size.small"
+                    [color]="path.method | methodColor"></sn-label>
+          <div>{{path.url}}</div>
+        </sn-stack>
+      </sn-stack>
+    </div>
+  </ng-container>
+</sn-stack>
