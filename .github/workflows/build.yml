@@ -4,7 +4,7 @@ on: [ pull_request, push ]
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
 
 jobs:
   build:
@@ -22,18 +22,20 @@ jobs:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: Extract metadata (tags, labels) for Docker
       id: meta
       uses: docker/metadata-action@v1
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        images: ${{ env.IMAGE_NAME }}
+        tag-sha: true
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: deploy/Dockerfile
-        push: true
+        push: ${{ github.ref == 'refs/heads/main' }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:_buildcache
+        cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:_buildcache,mode=max 
