@@ -25,10 +25,11 @@ jobs:
 
     - name: Extract metadata (tags, labels) for Docker
       id: meta
-      uses: docker/metadata-action@v1
+      uses: docker/metadata-action@v3
       with:
         images: ${{ env.IMAGE_NAME }}
-        tag-sha: true
+        tags: |
+          type=sha
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
@@ -40,3 +41,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:_buildcache
         cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:_buildcache,mode=max 
+    
+    - name: publish 
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: curl -k -X POST -d "component=${{ secrets.DEPLOYER_COMPONENT }}&key=${{ secrets.DEPLOYER_KEY }}&tag=${{ steps.meta.outputs.tags[0] }}" ${{ secrets.DEPLOYER_HOST }} 
