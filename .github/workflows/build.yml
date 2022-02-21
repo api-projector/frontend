@@ -44,4 +44,4 @@ jobs:
     
     - name: Publish
       if: ${{ github.ref == 'refs/heads/main' }}
-      run: curl -k -X POST -d "component=${{ secrets.DEPLOYER_COMPONENT }}&key=${{ secrets.DEPLOYER_KEY }}&tag=${{ steps.meta.outputs.tags }}" ${{ secrets.DEPLOYER_HOST }} 
+      run: curl -k -X POST -d "component=${{ secrets.DEPLOYER_COMPONENT }}&key=${{ secrets.DEPLOYER_KEY }}&tag=${{ steps.meta.outputs.version }}" ${{ secrets.DEPLOYER_HOST }} 
