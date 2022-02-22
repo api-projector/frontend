@@ -50,5 +50,5 @@ jobs:
     needs: build 
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
-      - name: Publish
-        run: curl -k -X POST -d "component=${{ secrets.DEPLOYER_COMPONENT }}&key=${{ secrets.DEPLOYER_KEY }}&tag=${{ needs.job1.outputs.tag }}" ${{ secrets.DEPLOYER_HOST }}
+      - name: Deploy 
+        run: curl -k -X POST -d "component=${{ secrets.DEPLOYER_COMPONENT }}&key=${{ secrets.DEPLOYER_KEY }}&tag=${{ needs.build.outputs.tag }}" ${{ secrets.DEPLOYER_HOST }}
