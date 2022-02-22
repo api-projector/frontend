@@ -13,7 +13,7 @@ FROM nginx:1.17.4-alpine
 
 WORKDIR /var/www
 
-COPY deploy/nginx.conf /etc/nginx/nginx.conf
+COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /src/dist .
 
 RUN addgroup -S -g 10001 app \
