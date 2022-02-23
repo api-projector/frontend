@@ -1,6 +1,6 @@
 # Visual 🥳 Swagger Editor for Teams
 
-Get full power of Spec-First approach in your team for API contracts ❤️ 
+Get full power of [Spec-First](https://oai.github.io/Documentation/specification.html) approach in your team for API contracts ❤️ 
 
 <img width="630" height="362" src="https://drive.google.com/uc?export=view&id=1JrrtYc5Yn_CpxntsvPhz7IcCv6N9yxGk" style="border: 1px solid silver;border-radius: 5px;">
 
@@ -8,7 +8,7 @@ Here is only ✋ frontend part written on [Angular](https://angular.io/) and [es
 
 See more information about product on [our landing](https://apiprojector.com/).
 
-For deploying project locally, please check tutorial 👉 [here](https://github.com/api-projector/api-projector)
+For deploying project locally, please check [tutorial](https://github.com/api-projector/api-projector)
 
 ## Developing
 
