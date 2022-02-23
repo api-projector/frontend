@@ -45,7 +45,7 @@ export class LayoutComponent {
   }
 
   createIssue() {
-    open('https://gitlab.com/junte/api-projector/feedback/-/issues');
+    open('https://github.com/api-projector/api-projector/issues');
   }
 
 }
