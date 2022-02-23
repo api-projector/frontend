@@ -85,6 +85,20 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "mocks": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.mocks.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -97,6 +111,9 @@
             },
             "development": {
               "browserTarget": "ap:build:development"
+            },
+            "mocks": {
+              "browserTarget": "ap:build:mocks"
             }
           },
           "defaultConfiguration": "development"

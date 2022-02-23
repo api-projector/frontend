@@ -5,5 +5,5 @@ export const environment = {
   storage: localStorage.getItem(COUCH_DB_URL_KEY)  || 'https://app.apiprojector.com/couchdb',
   assets: '/media',
   graphql: '/api/graphql',
-  mocks: false
+  mocks: true
 };

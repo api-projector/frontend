@@ -11,7 +11,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormComponent, InputComponent, UI } from '@esanum/ui';
 import 'reflect-metadata';
-import { finalize, map } from 'rxjs/operators';
+import { delay, finalize, map } from 'rxjs/operators';
 import { deserialize, serialize } from 'serialize-ts';
 import { AppConfig } from 'src/app/config';
 import { AuthToken } from 'src/models/auth-token';
@@ -20,7 +20,7 @@ import { BackendError } from '../../types/gql-errors';
 import { processGQL } from '../../utils/gql-errors';
 import { LoginGQL, SocialLoginCompleteGQL, SocialLoginGQL } from './graphql';
 import { CompleteSocialLogin, MakeSocialLogin, TrySocialLogin, UserCredentials } from './models';
-import { PROD_MODE } from '../../consts';
+import { UI_DELAY, USE_MOCKS } from '../../consts';
 import { getMock } from '@junte/mocker';
 import { of } from 'rxjs';
 
@@ -39,8 +39,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
   errors: BackendError[] = [];
 
   form = this.builder.group({
-    email: [PROD_MODE ? null : 'anton@junte.ru', [Validators.required, Validators.email]],
-    password: [PROD_MODE ? null : '44332211', [Validators.required]]
+    email: [null, [Validators.required, Validators.email]],
+    password: [null, [Validators.required]]
   });
 
   @ViewChild(FormComponent)
@@ -64,6 +64,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.completeSocialLogin();
+
+    if (USE_MOCKS) {
+      this.form.patchValue({
+        email: 'user@test.com',
+        password: '123456'
+      });
+    }
   }
 
   ngAfterViewInit() {
@@ -99,11 +106,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
     const request = new UserCredentials(this.form.getRawValue());
     this.progress.login = true;
     this.cd.detectChanges();
-    const action = PROD_MODE
-      ? this.loginGQL.mutate({input: request})
+    const action = USE_MOCKS
+      ? of(getMock(AuthToken)).pipe(delay(UI_DELAY))
+      : this.loginGQL.mutate({input: request})
         .pipe(processGQL(),
-          map(({login: {token}}) => deserialize(token, AuthToken)))
-      : of(getMock(AuthToken));
+          map(({login: {token}}) => deserialize(token, AuthToken)));
     action.pipe(finalize(() => {
       this.progress.login = false;
       this.cd.detectChanges();

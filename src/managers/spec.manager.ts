@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UI } from '@esanum/ui';
 import { NGXLogger } from 'ngx-logger';
 import inMemoryPlugin from 'pouchdb-adapter-memory';
 import PouchDB from 'pouchdb-browser';
@@ -9,12 +8,9 @@ import { generate } from 'shortid';
 import { EditMode } from 'src/enums/edit-mode';
 import { Persistence, SerializeType } from 'src/libs/persistence';
 import { AppConfig } from '../app/config';
-import { CURRENT_LANGUAGE, PROD_MODE, SCHEME_VERSION } from '../consts';
-import { Language } from '../enums/language';
+import { SCHEME_VERSION, USE_LOCAL_DB } from '../consts';
 import { ReplicationState } from '../enums/replication-state';
 import { environment } from '../environments/environment';
-import { Path } from '../models/path';
-import { PathRefPoint, ScreenFile, ScreenFilePathRef } from '../models/screen-file';
 import { Spec, SPEC_DOC_ID } from '../models/spec';
 import { User } from '../models/user';
 import { SchemeInvalidError } from '../types/errors';
@@ -145,7 +141,13 @@ export class SpecManager {
   get(dbName: string, demo: boolean = false): Observable<Spec> {
     if (!this.spec$) {
       this.spec$ = new BehaviorSubject<Spec | null>(null);
-      if (PROD_MODE) {
+      if (USE_LOCAL_DB) {
+        this.db.local = new PouchDB(dbName,
+          {
+            auto_compaction: true
+          });
+        this.loadFromLocal(true);
+      } else {
         this.db.local = new PouchDB(generate(),
           {
             adapter: 'memory',
@@ -174,12 +176,6 @@ export class SpecManager {
 
             this.loadFromLocal(demo);
           }).on('error', (err: Object) => this.spec$?.error(err));
-      } else {
-        this.db.local = new PouchDB(dbName,
-          {
-            auto_compaction: true
-          });
-        this.loadFromLocal();
       }
     }
 

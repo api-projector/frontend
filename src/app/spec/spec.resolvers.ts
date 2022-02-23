@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, of, switchMap } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { delay, finalize, map } from 'rxjs/operators';
 import { deserialize } from 'serialize-ts';
 import { SpecManager } from '../../managers/spec.manager';
 import { Path } from '../../models/path';
@@ -13,7 +13,7 @@ import { Spec } from '../../models/spec';
 import { SchemeInvalidError } from '../../types/errors';
 import { processGQL } from '../../utils/gql-errors';
 import { ProjectGQL } from './spec.graphql';
-import { PROD_MODE } from "../../consts";
+import { UI_DELAY, USE_MOCKS } from "../../consts";
 import { getMock } from "@junte/mocker";
 import { NotFoundError } from "../../types/gql-errors";
 
@@ -26,11 +26,11 @@ export class ProjectResolver implements Resolve<Observable<Project>> {
   resolve(route: ActivatedRouteSnapshot,
           state: RouterStateSnapshot): Observable<Project> {
     const {project} = route.params;
-    return PROD_MODE
-      ? this.projectGQL.fetch({id: project})
+    return USE_MOCKS
+      ? of(getMock(Project)).pipe(delay(UI_DELAY))
+      : this.projectGQL.fetch({id: project})
         .pipe(processGQL(),
-          map(({project}) => deserialize(project, Project)))
-      : of(getMock(Project));
+          map(({project}) => deserialize(project, Project)));
   }
 }
 
@@ -45,10 +45,10 @@ export class SpecResolver implements Resolve<Spec> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Spec> {
     const {project, demo} = route.params;
     return new Observable(o => {
-      const action = PROD_MODE
-        ? this.projectGQL.fetch({id: project})
-          .pipe(processGQL(), map(({project: p}) => deserialize(p, Project)))
-        : of(getMock(Project));
+      const action = USE_MOCKS
+        ? of(getMock(Project)).pipe(delay(UI_DELAY))
+        : this.projectGQL.fetch({id: project})
+          .pipe(processGQL(), map(({project: p}) => deserialize(p, Project)));
       action.pipe(switchMap(p => this.manager.get(p.dbName, demo)),
         finalize(() => o.complete()))
         .subscribe(s => o.next(s), err => {

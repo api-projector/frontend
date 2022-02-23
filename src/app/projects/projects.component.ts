@@ -6,21 +6,21 @@ import {
   Injector,
   OnInit, TemplateRef, ViewChild
 } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ModalService, PopoverInstance, UI} from '@esanum/ui';
-import {delay, finalize, map} from 'rxjs/operators';
-import {deserialize} from 'serialize-ts';
-import {AnalyticsType} from 'src/enums/analytics-type';
-import {PagingProjects, Project, ProjectsFilter} from 'src/models/project';
-import {PROD_MODE, UI_DELAY} from '../../consts';
-import {LocalUI} from '../../enums/local-ui';
-import {MeUser} from '../../models/user';
-import {processGQL} from '../../utils/gql-errors';
-import {EditProjectComponent} from './edit-project/edit-project.component';
-import {AllProjectsGQL, DeleteProjectGQL} from './graphql';
-import {PROP_DECORATORS} from "@angular/compiler-cli/ngcc/src/host/esm2015_host";
-import {getMock} from "@junte/mocker";
-import {of} from "rxjs";
+import { ActivatedRoute, Router } from '@angular/router';
+import { ModalService, PopoverInstance, UI } from '@esanum/ui';
+import { delay, finalize, map } from 'rxjs/operators';
+import { deserialize } from 'serialize-ts';
+import { AnalyticsType } from 'src/enums/analytics-type';
+import { PagingProjects, Project, ProjectsFilter } from 'src/models/project';
+import { USE_MOCKS, UI_DELAY } from '../../consts';
+import { LocalUI } from '../../enums/local-ui';
+import { MeUser } from '../../models/user';
+import { processGQL } from '../../utils/gql-errors';
+import { EditProjectComponent } from './edit-project/edit-project.component';
+import { AllProjectsGQL, DeleteProjectGQL } from './graphql';
+import { PROP_DECORATORS } from "@angular/compiler-cli/ngcc/src/host/esm2015_host";
+import { getMock } from "@junte/mocker";
+import { of } from "rxjs";
 
 export const I18N_ADD_PROJECT = $localize`:@@label.add_project:Add project`;
 export const I18N_EDIT_PROJECT = $localize`:@@label.edit_project:Edit project`;
@@ -40,7 +40,7 @@ export class ProjectsComponent implements OnInit {
 
   private filter!: ProjectsFilter;
 
-  progress = { loading: false };
+  progress = {loading: false};
   reference: { popover: PopoverInstance | null } = {popover: null};
 
   me!: MeUser;
@@ -69,11 +69,11 @@ export class ProjectsComponent implements OnInit {
   load() {
     this.progress.loading = true;
     this.cd.detectChanges();
-    const action = PROD_MODE
-      ? this.allProjectsGQL.fetch(this.filter)
+    const action = USE_MOCKS
+      ? of(getMock(PagingProjects)).pipe(delay(UI_DELAY))
+      : this.allProjectsGQL.fetch(this.filter)
         .pipe(processGQL(),
-          map(({projects}) => deserialize(projects, PagingProjects)))
-      : of(getMock(PagingProjects)).pipe(delay(UI_DELAY));
+          map(({projects}) => deserialize(projects, PagingProjects)));
     action.pipe(finalize(() => {
       this.progress.loading = false;
       this.cd.detectChanges();
