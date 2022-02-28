@@ -20,7 +20,7 @@ import { onError } from "@apollo/client/link/error";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 
-export const BASE_URI = 'https://app.apiprojector.com';
+export const BASE_URI = location.origin;
 export const UI_DELAY = 500;
 export const SCHEME_VERSION = 6;
 export const DATE_FORMAT = 'yyyy-MM-dd';
