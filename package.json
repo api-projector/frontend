@@ -37,7 +37,7 @@
     "gql-query-builder": "3.5.5",
     "graphql": "16.0.1",
     "graphql-tag": "2.12.5",
-    "graphql-tools": "8.2.0",
+    "graphql-tools": "8.2.1",
     "js-yaml": "4.1.0",
     "jsonschema": "1.4.0",
     "lodash": "4.17.21",
