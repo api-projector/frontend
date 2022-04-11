@@ -23,7 +23,7 @@
     "@angular/router": "13.0.0",
     "@apollo/client": "3.5.5",
     "@apollo/link-context": "2.0.0-beta.3",
-    "@esanum/ui": "https://gitlab.com/api/v4/projects/31260197/packages/npm/@esanum/ui/-/@esanum/ui-1.0.59.tgz",
+    "@esanum/ui": "https://gitlab.com/api/v4/projects/31260197/packages/npm/@esanum/ui/-/@esanum/ui-1.0.78.tgz",
     "@sentry/angular": "6.15.0",
     "@sentry/tracing": "6.15.0",
     "@stoplight/json-ref-readers": "1.2.2",
