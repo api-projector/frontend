@@ -9,7 +9,7 @@ COPY . .
 RUN npm run build
 
 
-FROM nginx:1.23.0-alpine
+FROM nginx:1.23.3-alpine
 
 WORKDIR /var/www
 
